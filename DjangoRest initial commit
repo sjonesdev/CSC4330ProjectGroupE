@@ -1,0 +1,24 @@
+Django Rest Framework
+I have used the link below to create our DRF, you can find answers to most questions you may have.
+https://coding-sessions.com/series/drf/
+
+You can access the files commited through my public repo:     https://github.com/bkab1/DjangoRestFramework/compare/master?expand=1
+
+Needed steps with brief descriptions:
+
+1- Installing Django Rest Framework
+2- Create Django Project 
+3- Create an "App". # Apps are individual pieces of logic that'll allow us to compartmentalize 
+                    # all the different things that our project is going to do, as well as keep ieces of project grouped together.
+4- Create Models and Serializers testing
+5- DRF Database migrations and serializers testing. # Django migrations automatically defines SQL tables for our models. 
+                                                    # So, the Fields defined in model are mapped to Columns in the SQL table. 
+                                                    # "So whenever we create a new model or change an existing model, 
+                                                    # we will do a simple migration and Django will create python scripts for 
+                                                    # migrations which we can store in your source repo for tracking DB changes 
+                                                    # over time and it’s helpful for our code update in production."
+6- Creating Views
+7- Browsable API
+8 YASG Customization
+----------------------------------------------------------------------------------------------------------------------------------
+Moving forward, coordination with Martin and Adam is vital.
