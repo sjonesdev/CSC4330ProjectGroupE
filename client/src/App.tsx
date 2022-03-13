@@ -25,19 +25,19 @@ function App() {
             <Link to="/about">About</Link>
           </li>
           <li>
-            <Link to="/profile">Users</Link>
+            <Link to="/profile">Profile</Link>
           </li>
           <li>
-            <Link to="/listing"></Link>
+            <Link to="/listing">Listings</Link>
           </li>
           <li>
-            <Link to="/signin"></Link>
+            <Link to="/signin">Sign In</Link>
           </li>
           <li>
-            <Link to="/signup"></Link>
+            <Link to="/signup">Sign Up</Link>
           </li>
           <li>
-            <Link to="/search"></Link>
+            <Link to="/search">Search</Link>
           </li>
         </ul>
       </nav>
