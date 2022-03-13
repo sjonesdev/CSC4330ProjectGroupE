@@ -2,9 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.scss';
-import Navbar from './components/Navbar';
-import FeaturedListings from './components/FeaturedListings';
-import SearchBar from './components/SearchBar';
+import Navbar from './components/common/Navbar';
+import FeaturedListings from './components/Home/FeaturedListings';
+import SearchBar from './components/common/SearchBar';
 
 function App() {
   return (
