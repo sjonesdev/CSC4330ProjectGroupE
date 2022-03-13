@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import Footer from '../common/Footer';
 import SearchBar from '../common/SearchBar';
 import FeaturedListings from './FeaturedListings';
 
@@ -18,7 +19,7 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
     render() { 
         return (
-            <div className="Home">
+            <><div className="Home">
                 <SearchBar />
                 <div className="welcome">
                     <h2>Welcome to</h2>
@@ -29,7 +30,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                     </div>
                 </div>
                 <FeaturedListings />
-            </div>
+            </div><Footer /></>
         );
     }
 }
