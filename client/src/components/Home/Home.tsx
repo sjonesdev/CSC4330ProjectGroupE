@@ -19,7 +19,7 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
     render() { 
         return (
-            <><div className="Home">
+            <div className="Home">
                 <SearchBar />
                 <div className="welcome">
                     <h2>Welcome to</h2>
@@ -30,7 +30,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                     </div>
                 </div>
                 <FeaturedListings />
-            </div><Footer /></>
+            </div>
         );
     }
 }

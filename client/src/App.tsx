@@ -11,6 +11,7 @@ import SignUp from './components/SignUp/SignUp';
 import Search from './components/Search/Search';
 import Home from './components/Home/Home';
 import About from './components/About/About';
+import Footer from './components/common/Footer';
 
 
 function App() {
@@ -51,7 +52,10 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/search" element={<Search />} />
       </Routes>
+      
+      <Footer />
     </Router>
+
   );
 }
 
