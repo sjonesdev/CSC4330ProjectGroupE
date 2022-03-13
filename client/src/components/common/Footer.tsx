@@ -19,7 +19,7 @@ class Footer  extends React.Component<FooterProps, FooterState> {
             <div className="footer">
               <ul>
                   <li><Link to ="/about">About</Link></li>
-                  <li><Link to ="/Contact Us">Contact Us</Link></li>
+                  <li><Link to ="/about#contact-us">Contact Us</Link></li>
                   <li></li>
               </ul>  
             </div>
