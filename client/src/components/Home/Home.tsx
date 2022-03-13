@@ -1,4 +1,6 @@
 import * as React from 'react';
+import SearchBar from '../common/SearchBar';
+import FeaturedListings from './FeaturedListings';
 
 interface HomeProps {
     
@@ -14,7 +16,12 @@ class Home extends React.Component<HomeProps, HomeState> {
         this.state = {};
     }
     render() { 
-        return ( <></> );
+        return (
+            <div className="Home">
+                <SearchBar />
+                <FeaturedListings />
+            </div>
+        );
     }
 }
  

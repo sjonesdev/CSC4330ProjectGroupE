@@ -1,10 +1,17 @@
-import React from 'react';
+import * as React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.scss';
-import Navbar from './components/common/Navbar';
-import FeaturedListings from './components/Home/FeaturedListings';
-import SearchBar from './components/common/SearchBar';
+
+// Component Imports
+import Profile from './components/Profile/Profile';
+import Listing from './components/Listing/Listing';
+import SignIn from './components/SignIn/SignIn';
+import SignUp from './components/SignUp/SignUp';
+import Search from './components/Search/Search';
+import Home from './components/Home/Home';
+import About from './components/About/About';
+
 
 function App() {
   return (
@@ -18,35 +25,34 @@ function App() {
             <Link to="/about">About</Link>
           </li>
           <li>
-            <Link to="/users">Users</Link>
+            <Link to="/profile">Users</Link>
+          </li>
+          <li>
+            <Link to="/listing"></Link>
+          </li>
+          <li>
+            <Link to="/signin"></Link>
+          </li>
+          <li>
+            <Link to="/signup"></Link>
+          </li>
+          <li>
+            <Link to="/search"></Link>
           </li>
         </ul>
       </nav>
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<Home />} />
-        <Route path="/users" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/listing" element={<Listing />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/search" element={<Search />} />
       </Routes>
     </Router>
   );
-}
-
-function Home(): JSX.Element {
-  return (
-    <div className="Home">
-      <SearchBar />
-      <FeaturedListings />
-    </div>
-  );
-}
-
-function About() {
-  return <h2>About</h2>;
-}
-
-function Users() {
-  return <h2>Users</h2>;
 }
 
 export default App;
