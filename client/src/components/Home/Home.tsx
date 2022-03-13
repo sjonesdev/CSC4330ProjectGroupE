@@ -24,8 +24,8 @@ class Home extends React.Component<HomeProps, HomeState> {
                     <h2>Welcome to</h2>
                     <h1>Columbus List</h1>
                     <div className="btn-container">
-                        <Link to="signin"><button>Sign In</button></Link>
-                        <Link to="signup"><button>Sign Up</button></Link>
+                        <Link to="/signin"><button>Sign In</button></Link>
+                        <Link to="/signup"><button>Sign Up</button></Link>
                     </div>
                 </div>
                 <FeaturedListings />
