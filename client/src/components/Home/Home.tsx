@@ -20,7 +20,6 @@ class Home extends React.Component<HomeProps, HomeState> {
     render() { 
         return (
             <div className="Home">
-                <SearchBar />
                 <div className="welcome">
                     <h2>Welcome to</h2>
                     <h1>Columbus List</h1>
@@ -29,6 +28,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                         <Link to="/signup"><button>Sign Up</button></Link>
                     </div>
                 </div>
+                <SearchBar />
                 <FeaturedListings />
             </div>
         );

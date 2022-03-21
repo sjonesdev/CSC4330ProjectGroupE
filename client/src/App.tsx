@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.scss';
 
+
 // Component Imports
 import Profile from './components/Profile/Profile';
 import Listing from './components/Listing/Listing';
@@ -13,6 +14,10 @@ import Home from './components/Home/Home';
 import About from './components/About/About';
 import Footer from './components/common/Footer';
 
+// FontAwesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+library.add(faMagnifyingGlass);
 
 function App() {
   return (

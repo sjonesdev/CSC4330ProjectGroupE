@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface SearchBarProps {
     
@@ -16,7 +17,13 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
     render() { 
         return (
             <div className="SearchBar">
-                <h3>This is a search bar</h3>
+                <form action="" method="get">
+                    <input type="search" id="search" />
+                    <button type="submit">
+                        <FontAwesomeIcon icon={["fas", "magnifying-glass"]} />
+                        {/* <FontAwesomeIcon icon={faMagnifyingGlass} /> */}
+                    </button>
+                </form>
             </div>
         );
     }
