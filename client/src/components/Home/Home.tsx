@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Footer from '../common/Footer';
 import SearchBar from '../common/SearchBar';
 import FeaturedListings from './FeaturedListings';
+import './Home.scss';
 
 interface HomeProps {
     
