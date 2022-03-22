@@ -23,6 +23,8 @@ $gainsboro-92: hsl(170, 15%, 92%);
 $gainsboro-81: hsl(170, 15%, 81%);
 $gainsboro-56: hsl(170, 15%, 56%);
 
+$footer-height: 2.5rem;
+
 a {
     color: inherit;
     text-decoration: none;
@@ -31,4 +33,18 @@ a {
 button {
     color: inherit;
     background-color: $rubine-red-44;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    margin: 0.5rem;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+button:active {
+    background-color: $rubine-red-60;
 }

@@ -73,16 +73,9 @@ nav {
   }
 }
 
-.search-bar {
-  form {
-    #search {
-      width: 30rem;
-    }
-  }
-}
-
 .footer {
-  position: fixed;
+  position: absolute;
+  height: lib.$footer-height;
   bottom: 0;
   width: 100%;
   padding: 2rem;

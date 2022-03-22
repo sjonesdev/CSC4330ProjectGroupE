@@ -1,0 +1,25 @@
+$search-height: 1.5rem;
+
+.search-bar {
+    height: max-content;
+    form {
+        display: flex;
+        align-items: center;
+        margin: 1rem 0;
+        #search {
+            height: $search-height;
+            width: 25rem;
+        }
+
+        #search-btn {
+            margin-left: 0;
+            height: $search-height;
+            font-size: medium;
+            display: inline-flex;
+            align-items: center;
+        }
+        #search-btn:hover {
+            transform: scale(1.0);
+        }
+    }
+}

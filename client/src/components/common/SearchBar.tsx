@@ -18,8 +18,8 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
         return (
             <div className="search-bar">
                 <form action="" method="get">
-                    <input type="search" name="search" />
-                    <button type="submit">
+                    <input type="search" name="search" id="search" />
+                    <button type="submit" id="search-btn">
                         <FontAwesomeIcon icon={["fas", "magnifying-glass"]} />
                         {/* <FontAwesomeIcon icon={faMagnifyingGlass} /> */}
                     </button>
