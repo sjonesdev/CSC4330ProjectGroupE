@@ -1,0 +1,92 @@
+@use 'lib';
+
+:root {
+  background: lib.$bright-navy-blue-47;
+  color: lib.$ghost-white-99;
+}
+
+h1, h2, h3 {
+  font-family: lib.$noto-serif-display;
+  text-align: center;
+  margin: 0;
+}
+
+h1 {
+  font-size: 5rem;
+}
+
+h2 {
+  font-size: 3rem;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+nav {
+  background-color: lib.$bright-navy-blue-60;
+  ul {
+    width: max-content;
+    padding: 0;
+    margin: auto;
+    li {
+      display: inline-block;
+      margin: 0.5rem 1rem;
+    }
+  }
+}
+
+.footer {
+  position: absolute;
+  height: lib.$footer-height;
+  bottom: 0;
+  width: 100%;
+  padding: 2rem;
+  background-color: lib.$bright-navy-blue-20;
+  ul {
+    width: max-content;
+    margin: auto;
+    padding: 0;
+    li {
+      display: inline-block;
+      margin: 0.5rem 1rem;
+    }
+  }
+}

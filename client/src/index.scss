@@ -1,4 +1,6 @@
-@use 'lib';
+@use 'styles/lib';
+@use 'styles/App';
+@use 'styles/components';
 
 body {
   margin: 0;
@@ -9,4 +11,13 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+#root {
+  min-height: 100vh;
+  position: relative;
+}
+
+#root:last-child {
+  padding-bottom: lib.$footer-height;
 }
