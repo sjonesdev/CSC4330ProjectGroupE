@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import SearchBar from '../common/SearchBar';
 import FeaturedListings from './FeaturedListings';
-import './Home.scss';
 
 interface HomeProps {
     signedIn: boolean

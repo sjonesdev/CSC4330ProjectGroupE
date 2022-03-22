@@ -1,7 +1,24 @@
 @use 'lib';
 
+@forward './components/Home';
+
+:root {
+  background: lib.$bright-navy-blue-47;
+  color: lib.$ghost-white-99;
+}
+
 h1, h2, h3 {
   font-family: lib.$noto-serif-display;
+  text-align: center;
+  margin: 0;
+}
+
+h1 {
+  font-size: 5rem;
+}
+
+h2 {
+  font-size: 3rem;
 }
 
 .App {
@@ -46,6 +63,7 @@ h1, h2, h3 {
 
 
 nav {
+  background-color: lib.$bright-navy-blue-60;
   ul {
     width: max-content;
     padding: 0;
@@ -53,10 +71,6 @@ nav {
     li {
       display: inline-block;
       margin: 0.5rem 1rem;
-      a {
-        text-decoration: none;
-        color: inherit;
-      }
     }
   }
 }
@@ -65,6 +79,23 @@ nav {
   form {
     #search {
       width: 30rem;
+    }
+  }
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 2rem;
+  background-color: lib.$bright-navy-blue-20;
+  ul {
+    width: max-content;
+    margin: auto;
+    padding: 0;
+    li {
+      display: inline-block;
+      margin: 0.5rem 1rem;
     }
   }
 }
