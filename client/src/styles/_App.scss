@@ -1,7 +1,5 @@
 @use 'lib';
 
-@forward './components/Home';
-
 :root {
   background: lib.$bright-navy-blue-47;
   color: lib.$ghost-white-99;
