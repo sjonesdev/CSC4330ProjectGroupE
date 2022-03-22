@@ -43,7 +43,28 @@ h1, h2, h3 {
   }
 }
 
+
+
+nav {
+  ul {
+    width: max-content;
+    padding: 0;
+    margin: auto;
+    li {
+      display: inline-block;
+      margin: 0.5rem 1rem;
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+    }
+  }
+}
+
 .search-bar {
-  width: 20rem;
-  
+  form {
+    #search {
+      width: 30rem;
+    }
+  }
 }
