@@ -70,7 +70,7 @@ class App extends React.Component<Object, AppState> {
           <Route path="/profile" element={<Profile />} />
           <Route path="/listing" element={<Listing />} />
           <Route path="/signin" element={this.state.signedIn ? <Navigate to="/" /> : <SignIn signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signup" element={this.state.signedIn ? <Navigate to="/" /> : <SignUp signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
           <Route path="/search" element={<Search />} />
         </Routes>
         

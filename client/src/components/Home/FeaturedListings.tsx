@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ListingPreview from '../common/ListingPreview';
 
 import Listing from '../Listing/Listing';
 
@@ -19,7 +20,9 @@ class FeaturedListings extends React.Component<FeaturedListingsProps, FeaturedLi
 
     getLatestListings() {
         return (
-            <Listing />
+            <div className="listing-picture-list">
+                <img src="" alt="" />
+            </div>
         );
     }
 
