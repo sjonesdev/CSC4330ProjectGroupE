@@ -1,0 +1,8 @@
+The backend server runs on 127.0.0.1:8000
+
+To access the admin panel to create Users, Listings, etc. manually,
+go to 127.0.0.1:8000/admin/
+
+Note: if VS CODE does not recognize "rest_framework" and you
+are in a virtual Python environment, make sure that the Python
+interpreter in the venv folder is selected
