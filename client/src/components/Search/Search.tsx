@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ListingPreview from '../common/ListingPreview';
 
 interface SearchProps {
     
@@ -14,7 +15,9 @@ class Search extends React.Component<SearchProps, SearchState> {
         this.state = {  };
     }
     render() { 
-        return ( <></> );
+        return (
+            <ListingPreview/>
+        );
     }
 }
  
