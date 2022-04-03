@@ -6,3 +6,14 @@ go to 127.0.0.1:8000/admin/
 Note: if VS CODE does not recognize "rest_framework" and you
 are in a virtual Python environment, make sure that the Python
 interpreter in the venv folder is selected
+
+--- API ENDPOINTS ---
+
+127.0.0.1:8000/listings/
+-> returns all listings
+
+127.0.0.1:8000/listings/<username>/
+-> returns all listings belong to <username>
+
+127.0.0.1:8000/wishlist/<username>/
+-> returns all listings in <username>'s wishlist
