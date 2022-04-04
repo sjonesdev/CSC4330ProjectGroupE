@@ -1,1 +1,2 @@
 # CSC4330ProjectGroupE
+FrontEnd - Node.js and Yarn required. To install all packages run yarn install in the client directory. If you would like to use the dummy API, make a process.env file with USE_DUMMY_API=true.
