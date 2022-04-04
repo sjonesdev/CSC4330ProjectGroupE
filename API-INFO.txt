@@ -10,10 +10,16 @@ interpreter in the venv folder is selected
 --- API ENDPOINTS ---
 
 127.0.0.1:8000/listings/
--> returns all listings
+    GET -> returns all listings
+    POST -> add new listing
 
 127.0.0.1:8000/listings/<username>/
--> returns all listings belong to <username>
+    GET -> returns all listings belong to <username>
 
 127.0.0.1:8000/wishlist/<username>/
--> returns all listings in <username>'s wishlist
+    GET -> returns all listings in <username>'s wishlist
+    POST -> add new wishlist listing for <username>
+
+127.0.0.1:8000/users/
+    GET -> returns all users
+    POST -> add new user
