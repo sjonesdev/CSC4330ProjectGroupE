@@ -27,6 +27,10 @@ interface SearchProps {
     maxAgeHours: number
 }
 
+interface APIRequester {
+    
+}
+
 
 export default class APIRequestHandler {
 
@@ -70,56 +74,50 @@ export default class APIRequestHandler {
 
     // POST Requests
     
-    createProfile(profile: ProfileProps, password: string) {
-        axiosInstance.post('/profile', {...profile, password});
+    createProfile(profile: ProfileProps, password: string): Promise<boolean> {
+        return axiosInstance.post('/profile', {...profile, password});
     }
     
-    createListing(listing: ListingProps) {
-        axiosInstance.post('/listing', {...listing});
+    createListing(listing: ListingProps): Promise<boolean> {
+        return axiosInstance.post('/listing', {...listing});
     }
 
-    addWishlistListing(username: string, listingID: string) {
-        axios.get('/wishlist/' + username).then(
-            response => {
-                let curListings = response.data.listings
-                curListings.push(listingID);
-                axios.put('/wishlist/' + username, {listings: curListings});
-            }
-        );
+    async addWishlistListing(username: string, listingID: string): Promise<boolean> {
+        const response = await axios.get('/wishlist/' + username);
+        let curListings = response.data.listings;
+        curListings.push(listingID);
+        return axios.put('/wishlist/' + username, { listings: curListings });
     }
     
-    updateProfile(username: string, newProfile: ProfileProps) {
-        axios.put('/profile/' + username, {...newProfile});
+    updateProfile(username: string, newProfile: ProfileProps): Promise<boolean> {
+        return axios.put('/profile/' + username, {...newProfile});
     }
 
-    updateListing(listingID: string, newListing: ListingProps) {
-        axios.put('/profile/' + listingID, {...newListing});
+    updateListing(listingID: string, newListing: ListingProps): Promise<boolean> {
+        return axios.put('/profile/' + listingID, {...newListing});
     }
 
-    removeWishlistListing(username: string, listingID: string) {
-        axios.get('/wishlist/' + username).then(
-            response => {
-                let curListings = response.data.listings;
-                for(let i in curListings) {
-                    let listing = curListings[i];
-                    if(listing === listingID) {
-                        curListings.splice(i, 1);
-                    }
-                }
-                axios.put('/wishlist/' + username, {listings: curListings});
+    async removeWishlistListing(username: string, listingID: string): Promise<boolean> {
+        const response = await axios.get('/wishlist/' + username);
+        let curListings = response.data.listings;
+        for (let i in curListings) {
+            let listing = curListings[i];
+            if (listing === listingID) {
+                curListings.splice(i, 1);
             }
-        )
+        }
+        return axios.put('/wishlist/' + username, { listings: curListings });
     }
 
 
     // DELETE Requests
 
-    deleteProfile(username: string) {
-        axios.delete('/profile/' + username);
+    deleteProfile(username: string): Promise<boolean> {
+        return axios.delete('/profile/' + username);
     }
 
-    deleteListing(listingID: string) {
-        axios.delete('/listing/' + listingID);
+    deleteListing(listingID: string): Promise<boolean> {
+        return axios.delete('/listing/' + listingID);
     }
 
 }
