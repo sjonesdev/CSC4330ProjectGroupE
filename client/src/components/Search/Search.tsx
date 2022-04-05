@@ -30,7 +30,7 @@ class Search extends React.Component<SearchProps, SearchState> {
     render() { 
         return (
             <>
-                <SearchBar setSearchKeyword={this.getSearch} defaultValue={this.state.defaultSearch} />
+                <SearchBar setSearchKeyword={this.getSearch} defaultValue={this.state.defaultSearch} inSearchPage={true} />
                 {this.displaySearch()}
             </>
         );

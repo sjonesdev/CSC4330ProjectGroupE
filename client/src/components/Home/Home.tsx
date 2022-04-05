@@ -26,7 +26,7 @@ class Home extends React.Component<HomeProps, HomeState> {
         if(this.state.signedIn) {
             return (
                 <div className="inputs-container">
-                    <SearchBar setSearchKeyword={this.state.setDefaultSearchKeyword} defaultValue={""} />
+                    <SearchBar setSearchKeyword={this.state.setDefaultSearchKeyword} defaultValue={""} inSearchPage={false} />
                 </div>
             );
         } else {
