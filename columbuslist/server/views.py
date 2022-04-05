@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import User, Listing, WishlistListing
 from .serializers import UserSerializer, ListingSerializer, WishlistListingSerializer
-from webapp import serializers
+from server import serializers
 
 class AllListings(APIView):
     def get(self, request):
@@ -39,11 +39,26 @@ class WishlistListingsForUser(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ListingsForUser(APIView):
+class GetListingsForUser(APIView):
     def get(self, request, username):
         listings = Listing.objects.filter(user__username=username)
         serializer = ListingSerializer(listings, many=True)
         return Response(serializer.data)
+
+class PutDeleteListingsForUser(APIView):
+    def put(self, request, username, title):
+        listing = Listing.objects.get(user__username=username, title=title)
+        if listing == None:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = ListingSerializer(listing, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, username, title):
+        listing = Listing.objects.get(user__username=username, title=title)
+        listing.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserList(APIView):
     def get(self, request):

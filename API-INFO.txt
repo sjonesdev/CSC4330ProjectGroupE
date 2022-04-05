@@ -16,6 +16,10 @@ interpreter in the venv folder is selected
 127.0.0.1:8000/listings/<username>/
     GET -> returns all listings belong to <username>
 
+127.0.0.1:8000/listings/<username>/<title>/
+    PUT -> updates listing
+    DELETE -> removes listing
+
 127.0.0.1:8000/wishlist/<username>/
     GET -> returns all listings in <username>'s wishlist
     POST -> add new wishlist listing for <username>
