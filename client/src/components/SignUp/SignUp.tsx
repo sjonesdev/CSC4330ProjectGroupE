@@ -92,7 +92,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
                     <label htmlFor="confirmPassword">Confirm Password</label>
                     <input type="password" name="confirmPassword" onChange={this.handleChange} />
                     
-                    <input type="submit" value="Sign Up" />
+                    <input type="submit" className='submit' value="Sign Up" />
                 </form>
                 <h3>Already a member? <Link to="/signin">Sign In</Link></h3>
             </div>
