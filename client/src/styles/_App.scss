@@ -75,10 +75,10 @@ nav {
 
 .footer {
   position: absolute;
-  height: lib.$footer-height;
+  height: lib.$footer-height/2;
   bottom: 0;
   width: 100%;
-  padding: 2rem;
+  padding: lib.$footer-height/4;
   background-color: lib.$bright-navy-blue-20;
   ul {
     width: max-content;
