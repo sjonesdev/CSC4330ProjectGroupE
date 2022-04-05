@@ -16,6 +16,9 @@ interpreter in the venv folder is selected
 127.0.0.1:8000/listings/<username>/
     GET -> returns all listings belong to <username>
 
+127.0.0.1:8000/listingsquery/<query>/
+    GET -> returns all listings with <query> in the title (case insensitive)
+
 127.0.0.1:8000/listings/<username>/<title>/
     PUT -> updates listing
     DELETE -> removes listing

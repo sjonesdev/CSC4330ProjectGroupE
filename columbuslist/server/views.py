@@ -45,6 +45,12 @@ class GetListingsForUser(APIView):
         serializer = ListingSerializer(listings, many=True)
         return Response(serializer.data)
 
+class ListingsForSearchQuery(APIView):
+    def get(self, request, query):
+        listings = Listing.objects.filter(title__icontains=query)
+        serializer = ListingSerializer(listings, many=True)
+        return Response(serializer.data)
+
 class PutDeleteListingsForUser(APIView):
     def put(self, request, username, title):
         listing = Listing.objects.get(user__username=username, title=title)
