@@ -5,10 +5,12 @@ import FeaturedListings from './FeaturedListings';
 
 interface HomeProps {
     signedIn: boolean
+    setDefaultSearchKeyword: Function
 }
  
 interface HomeState {
     signedIn: boolean
+    setDefaultSearchKeyword: Function
 }
  
 class Home extends React.Component<HomeProps, HomeState> {
@@ -24,7 +26,7 @@ class Home extends React.Component<HomeProps, HomeState> {
         if(this.state.signedIn) {
             return (
                 <div className="inputs-container">
-                    <SearchBar />
+                    <SearchBar setSearchKeyword={this.state.setDefaultSearchKeyword} defaultValue={""} />
                 </div>
             );
         } else {

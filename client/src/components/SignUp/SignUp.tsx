@@ -18,6 +18,7 @@ interface SignUpFormData {
 interface SignUpState {
     setSignedIn: Function
     signedIn: boolean
+    profileCreated: boolean
     user: boolean
     error: any
 }
@@ -28,6 +29,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
         super(props);
         this.state = {
             ...props,
+            profileCreated: false,
             user: false,
             error: null,
         };
@@ -59,9 +61,10 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
                 phone: this.formData.phone
             }
             if(this.formData.password === this.formData.confirmPassword) {
-                let user = await APIRequestHandler.instance.createProfile(profInfo, this.formData.password);
-                this.setState({ user, signedIn: user });
-                this.state.setSignedIn(user);
+                let success = await APIRequestHandler.instance.createProfile(profInfo, this.formData.password);
+                if(success) {
+                    
+                }
             }
         } catch (error) {
             this.setState({ error });

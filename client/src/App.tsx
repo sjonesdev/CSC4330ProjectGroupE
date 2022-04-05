@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import logo from './logo.svg';
 
 
 // Component Imports
@@ -20,6 +19,7 @@ library.add(faMagnifyingGlass);
 
 interface AppState {
   signedIn: boolean
+  defaultSearchKeyword: string
 }
 
 class App extends React.Component<Object, AppState> {
@@ -27,12 +27,19 @@ class App extends React.Component<Object, AppState> {
   constructor(props?: Object) {
     super(props ? props : {});
     this.state = {
-      signedIn: false
+      signedIn: false,
+      defaultSearchKeyword: ""
     };
+    this.setSignedIn = this.setSignedIn.bind(this);
+    this.setDefaultSearch = this.setDefaultSearch.bind(this);
   }
 
   setSignedIn(signedIn: boolean) {
     this.setState({ signedIn });
+  }
+
+  setDefaultSearch(defaultSearchKeyword: string) {
+    this.setState({defaultSearchKeyword})
   }
 
   render() {
@@ -65,13 +72,13 @@ class App extends React.Component<Object, AppState> {
         </nav>
 
         <Routes>
-          <Route path="/" element={<Home signedIn={this.state.signedIn} />} />
+          <Route path="/" element={<Home signedIn={this.state.signedIn} setDefaultSearchKeyword={this.setDefaultSearch} />} />
           <Route path="/about" element={<About />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/listing" element={<Listing />} />
           <Route path="/signin" element={this.state.signedIn ? <Navigate to="/" /> : <SignIn signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
           <Route path="/signup" element={this.state.signedIn ? <Navigate to="/" /> : <SignUp signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
-          <Route path="/search" element={<Search />} />
+          <Route path="/search" element={<Search defaultSearch={this.state.defaultSearchKeyword} />} />
         </Routes>
         
         <Footer />
