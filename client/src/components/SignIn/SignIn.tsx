@@ -43,7 +43,7 @@ class SignIn extends React.Component<SignInProps, SignInState> {
             <div className="signin">
                 {this.state.signedIn && <Navigate to="/" replace={true} />}
                 <h1>Sign In</h1>
-                <form onSubmit={(event: React.FormEvent<HTMLFormElement>) => this.handleSubmit(event)} method="get">
+                <form className='form' onSubmit={(event: React.FormEvent<HTMLFormElement>) => this.handleSubmit(event)} method="get">
                     <label htmlFor="username">Username</label>
                     <input type="text" name='username' />
 

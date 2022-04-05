@@ -20,45 +20,29 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             error: null };
     }
     render() { 
-        return ( <>
-     
-            <div
-                className = "Name">
-
+        return (
+            <div className="content-container">
+                <div
+                    className = "Name">
+                </div>
+                <div
+                    className = "Listings">
+                    <img src="" alt="" />
+                </div>
+                <div
+                    className = "WishList">
+                    <img src="" alt="" />
+                </div>
+                <div
+                    className = "AddToWishList">
+                   <Link to="/WishList"><button>Add to WishList</button></Link>
+                </div>
+                <div
+                    className = "ChangePassword">
+                   <Link to="/ChangePassword"><button>Change your password</button></Link>
+                </div>
             </div>
-
-            <div
-                className = "Listings">
-                <img src="" alt="" />
-            </div>
-
-            <div
-                className = "WishList">
-                <img src="" alt="" />
-            </div>
-
-            <div
-                className = "AddToWishList">
-               <Link to="/WishList"><button>Add to WishList</button></Link>
-            </div>
-
-            <div
-                className = "ChangePassword">
-               <Link to="/ChangePassword"><button>Change your password</button></Link>
-            </div>
-
-
-
-       
-
-       
-
-       
-                
-
-        
-        
-        </> );
+        );
     }
 }
  

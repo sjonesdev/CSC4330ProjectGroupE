@@ -55,10 +55,28 @@ button:active {
     background-color: $rubine-red-60;
 }
 
+.form {
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    margin: 2rem auto;
+    input {
+      margin-bottom: 2rem;
+      font-size: inherit;
+    }
+  }
+
 .submit {
     background-color: $rubine-red-44;
     color: $ghost-white-99;
     border: none;
     border-radius: 0.5rem;
     padding: 0.25rem 0;
+}
+
+.content-container {
+    width: 90%;
+    max-width: 1500px;
+    margin: auto;
 }

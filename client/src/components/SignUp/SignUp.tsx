@@ -76,7 +76,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
             <div className="signup">
                 {this.state.signedIn && <Navigate to="/" replace={true} />}
                 <h1>Sign In</h1>
-                <form onSubmit={(event: React.FormEvent<HTMLFormElement>) => this.handleSubmit(event)}>
+                <form className='form' onSubmit={(event: React.FormEvent<HTMLFormElement>) => this.handleSubmit(event)}>
                     <label htmlFor="email">Email</label>
                     <input type="email" name="email" id="email" onChange={this.handleChange} />
 
