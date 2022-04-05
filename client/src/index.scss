@@ -9,6 +9,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+form {
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  margin: 2rem auto;
+  input {
+    margin-bottom: 2rem;
+    font-size: inherit;
+  }
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

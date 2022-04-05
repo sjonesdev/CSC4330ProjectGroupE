@@ -48,3 +48,11 @@ button:hover {
 button:active {
     background-color: $rubine-red-60;
 }
+
+.submit {
+    background-color: $rubine-red-44;
+    color: $ghost-white-99;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.25rem 0;
+}

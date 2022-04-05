@@ -50,7 +50,7 @@ class SignIn extends React.Component<SignInProps, SignInState> {
                     <label htmlFor="pass">Password</label>
                     <input type="password" name="pass" />
                     
-                    <input type="submit" value="Sign In" />
+                    <input type="submit" className="submit" value="Sign In" />
                 </form>
                 <h3>Not a member? <Link to="/signup">Sign Up</Link></h3>
             </div>
