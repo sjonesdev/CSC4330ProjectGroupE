@@ -1,13 +1,11 @@
 import axios from 'axios';
-require('dotenv').config();
-import { randomUUID } from 'crypto';
-import { resolve } from 'path';
+import crypto from 'crypto';
 const axiosInstance = axios.create({baseURL: 'https://localhost:8000'});
 
 interface ProfileProps {
     email: string,
     name: string,
-    phone: number
+    phone: string
 }
 
 interface ListingProps {
@@ -27,105 +25,9 @@ interface SearchProps {
     maxAgeHours: number
 }
 
-interface APIRequester {
-    
-}
-
-
-export default class APIRequestHandler {
-
-    static instance: APIRequestHandler = new APIRequestHandler();
-    
-    private constructor() {
-        if(process.env.USE_DUMMY_API === "true") {
-            APIRequestHandler.instance = new DummyAPIRequestHandler();
-        }
-    }
-
-
-    // GET Requests
-    //give username and password in request body, get user_info with id, username, and something else and token for auth in response
-    login(username: string, password: string): Promise<boolean> {
-        return axios.get('/login', {
-            params: {
-                username,
-                password
-            }
-        });
-    }
-
-    getProfile(username: string): Promise<ProfileProps> {
-        return axiosInstance.get('/profile/' + username);
-    }
-
-    getListing(listingID: string): Promise<ListingProps> {
-        return axiosInstance.get('/listing/' + listingID);
-    }
-
-    getListings(searchParams: SearchProps): Promise<ListingProps[]> {
-        return axiosInstance.get(
-            '/listing', 
-            {
-                params: searchParams
-            }
-        );
-    }
-
-
-    // POST Requests
-    
-    createProfile(profile: ProfileProps, password: string): Promise<boolean> {
-        return axiosInstance.post('/profile', {...profile, password});
-    }
-    
-    createListing(listing: ListingProps): Promise<boolean> {
-        return axiosInstance.post('/listing', {...listing});
-    }
-
-    async addWishlistListing(username: string, listingID: string): Promise<boolean> {
-        const response = await axios.get('/wishlist/' + username);
-        let curListings = response.data.listings;
-        curListings.push(listingID);
-        return axios.put('/wishlist/' + username, { listings: curListings });
-    }
-    
-    updateProfile(username: string, newProfile: ProfileProps): Promise<boolean> {
-        return axios.put('/profile/' + username, {...newProfile});
-    }
-
-    updateListing(listingID: string, newListing: ListingProps): Promise<boolean> {
-        return axios.put('/profile/' + listingID, {...newListing});
-    }
-
-    async removeWishlistListing(username: string, listingID: string): Promise<boolean> {
-        const response = await axios.get('/wishlist/' + username);
-        let curListings = response.data.listings;
-        for (let i in curListings) {
-            let listing = curListings[i];
-            if (listing === listingID) {
-                curListings.splice(i, 1);
-            }
-        }
-        return axios.put('/wishlist/' + username, { listings: curListings });
-    }
-
-
-    // DELETE Requests
-
-    deleteProfile(username: string): Promise<boolean> {
-        return axios.delete('/profile/' + username);
-    }
-
-    deleteListing(listingID: string): Promise<boolean> {
-        return axios.delete('/listing/' + listingID);
-    }
-
-}
-
-
-
 class DummyAPIRequestHandler {
     private static loggedInUser: number;
+    static loggedIn = false;
 
     static testTimeout = 300;//ms
     private static database = {
@@ -134,7 +36,7 @@ class DummyAPIRequestHandler {
                 email: 'email@example.com',
                 password: 'pass',
                 name: 'john doe',
-                phone: 9995550000
+                phone: '9995550000'
             }
         ],
         listings: [
@@ -242,6 +144,21 @@ class DummyAPIRequestHandler {
                 if(DummyAPIRequestHandler.database.profiles[userIndex].password === password) {
                     valid = true;
                     DummyAPIRequestHandler.loggedInUser = userIndex;
+                    DummyAPIRequestHandler.loggedIn = true;
+                }
+                valid ? resolve(true) : resolve(false);
+            }, DummyAPIRequestHandler.testTimeout);
+        });
+    }
+
+    logout(username: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                let valid = false;
+                if(DummyAPIRequestHandler.loggedInUser >= 0 && DummyAPIRequestHandler.database.profiles[DummyAPIRequestHandler.loggedInUser].email === username) {
+                    valid = true;
+                    DummyAPIRequestHandler.loggedInUser = -1;
+                    DummyAPIRequestHandler.loggedIn = false;
                 }
                 valid ? resolve(true) : resolve(false);
             }, DummyAPIRequestHandler.testTimeout);
@@ -254,7 +171,7 @@ class DummyAPIRequestHandler {
                 resolve({
                     email: 'email@example.com',
                     name: 'john doe',
-                    phone: 9995550000
+                    phone: '9995550000'
                 });
             }, DummyAPIRequestHandler.testTimeout);
         });
@@ -317,7 +234,7 @@ class DummyAPIRequestHandler {
     }
     
     createListing(listing: ListingProps): Promise<boolean> {
-        let listingID = randomUUID();
+        let listingID = crypto.randomUUID();
         DummyAPIRequestHandler.database.listings.push({...listing, listingID});
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -383,7 +300,7 @@ class DummyAPIRequestHandler {
     updateListing(listingID: string, newListing: ListingProps): Promise<boolean> {
         let l = this.findListing(listingID);
         if(l >= 0) {
-            if(DummyAPIRequestHandler.database.listings[l].listingID == newListing.listingID) {
+            if(DummyAPIRequestHandler.database.listings[l].listingID === newListing.listingID) {
                 DummyAPIRequestHandler.database.listings[l] = {...newListing};
                 return new Promise((resolve, reject) => {
                     setTimeout(() => {
@@ -456,4 +373,102 @@ class DummyAPIRequestHandler {
             }, DummyAPIRequestHandler.testTimeout);
         });
     }
+}
+
+let useDummyAPI = true;
+export default class APIRequestHandler {
+
+    static instance: APIRequestHandler = new APIRequestHandler();
+    static loggedIn = false;
+    
+    private constructor() {
+        if(useDummyAPI) {
+            APIRequestHandler.instance = new DummyAPIRequestHandler();
+        }
+    }
+
+
+    // GET Requests
+    //give username and password in request body, get user_info with id, username, and something else and token for auth in response
+    login(username: string, password: string): Promise<boolean> {
+        return axios.get('/login', {
+            params: {
+                username,
+                password
+            }
+        });
+    }
+
+    logout(username: string): Promise<boolean> {
+        return axios.get('/logout', {
+            params: {username}
+        });
+    }
+
+    getProfile(username: string): Promise<ProfileProps> {
+        return axiosInstance.get('/profile/' + username);
+    }
+
+    getListing(listingID: string): Promise<ListingProps> {
+        return axiosInstance.get('/listing/' + listingID);
+    }
+
+    getListings(searchParams: SearchProps): Promise<ListingProps[]> {
+        return axiosInstance.get(
+            '/listing', 
+            {
+                params: searchParams
+            }
+        );
+    }
+
+
+    // POST Requests
+    
+    createProfile(profile: ProfileProps, password: string): Promise<boolean> {
+        return axiosInstance.post('/profile', {...profile, password});
+    }
+    
+    createListing(listing: ListingProps): Promise<boolean> {
+        return axiosInstance.post('/listing', {...listing});
+    }
+
+    async addWishlistListing(username: string, listingID: string): Promise<boolean> {
+        const response = await axios.get('/wishlist/' + username);
+        let curListings = response.data.listings;
+        curListings.push(listingID);
+        return axios.put('/wishlist/' + username, { listings: curListings });
+    }
+    
+    updateProfile(username: string, newProfile: ProfileProps): Promise<boolean> {
+        return axios.put('/profile/' + username, {...newProfile});
+    }
+
+    updateListing(listingID: string, newListing: ListingProps): Promise<boolean> {
+        return axios.put('/profile/' + listingID, {...newListing});
+    }
+
+    async removeWishlistListing(username: string, listingID: string): Promise<boolean> {
+        const response = await axios.get('/wishlist/' + username);
+        let curListings = response.data.listings;
+        for (let i in curListings) {
+            let listing = curListings[i];
+            if (listing === listingID) {
+                curListings.splice(i, 1);
+            }
+        }
+        return axios.put('/wishlist/' + username, { listings: curListings });
+    }
+
+
+    // DELETE Requests
+
+    deleteProfile(username: string): Promise<boolean> {
+        return axios.delete('/profile/' + username);
+    }
+
+    deleteListing(listingID: string): Promise<boolean> {
+        return axios.delete('/listing/' + listingID);
+    }
+
 }
