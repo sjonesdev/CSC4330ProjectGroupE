@@ -28,6 +28,7 @@ interface SearchProps {
 class DummyAPIRequestHandler {
     private static loggedInUser: number;
     static loggedIn = false;
+    static loggedInUsername = "";
 
     static testTimeout = 300;//ms
     private static database = {
@@ -136,6 +137,10 @@ class DummyAPIRequestHandler {
 
     // GET Requests
     
+    getLoggedIn() {
+        return DummyAPIRequestHandler.loggedInUsername;
+    }
+
     login(username: string, password: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -145,6 +150,7 @@ class DummyAPIRequestHandler {
                     valid = true;
                     DummyAPIRequestHandler.loggedInUser = userIndex;
                     DummyAPIRequestHandler.loggedIn = true;
+                    DummyAPIRequestHandler.loggedInUsername = username;
                 }
                 valid ? resolve(true) : resolve(false);
             }, DummyAPIRequestHandler.testTimeout);
@@ -159,6 +165,7 @@ class DummyAPIRequestHandler {
                     valid = true;
                     DummyAPIRequestHandler.loggedInUser = -1;
                     DummyAPIRequestHandler.loggedIn = false;
+                    DummyAPIRequestHandler.loggedInUsername = "";
                 }
                 valid ? resolve(true) : resolve(false);
             }, DummyAPIRequestHandler.testTimeout);
@@ -380,6 +387,7 @@ export default class APIRequestHandler {
 
     static instance: APIRequestHandler = new APIRequestHandler();
     static loggedIn = false;
+    static loggedInUsername = "";
     
     private constructor() {
         if(useDummyAPI) {
@@ -389,8 +397,14 @@ export default class APIRequestHandler {
 
 
     // GET Requests
+
+    getLoggedIn() {
+        return APIRequestHandler.loggedInUsername;
+    }
+
     //give username and password in request body, get user_info with id, username, and something else and token for auth in response
     login(username: string, password: string): Promise<boolean> {
+        APIRequestHandler.loggedInUsername = username;
         return axios.get('/login', {
             params: {
                 username,
@@ -400,6 +414,7 @@ export default class APIRequestHandler {
     }
 
     logout(username: string): Promise<boolean> {
+        APIRequestHandler.loggedInUsername = "";
         return axios.get('/logout', {
             params: {username}
         });

@@ -15,6 +15,7 @@ import Footer from './components/common/Footer';
 // FontAwesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import APIRequestHandler from './components/common/APIRequestHandler';
 library.add(faMagnifyingGlass);
 
 interface AppState {
@@ -74,11 +75,12 @@ class App extends React.Component<Object, AppState> {
         <Routes>
           <Route path="/" element={<Home signedIn={this.state.signedIn} setDefaultSearchKeyword={this.setDefaultSearch} />} />
           <Route path="/about" element={<About />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<Profile username={APIRequestHandler.instance.getLoggedIn()} signedIn={this.state.signedIn} />} />
           <Route path="/listing" element={<Listing />} />
           <Route path="/signin" element={this.state.signedIn ? <Navigate to="/" /> : <SignIn signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
           <Route path="/signup" element={this.state.signedIn ? <Navigate to="/" /> : <SignUp signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
           <Route path="/search" element={<Search defaultSearch={this.state.defaultSearchKeyword} />} />
+          <Route path="/logout" element={() => {APIRequestHandler.instance.logout(APIRequestHandler.instance.getLoggedIn()); return (<Navigate to="/" />)}} />
         </Routes>
         
         <Footer />
