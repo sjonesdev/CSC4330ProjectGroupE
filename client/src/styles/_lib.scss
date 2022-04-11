@@ -1,0 +1,96 @@
+// Noto Serif - Regular 400, Regular 400 Italic, Bold 700
+$noto-serif: 'Noto Serif', serif;
+// Noto Serif Display - Regular 400, Regular 400 Italic, Bold 700
+$noto-serif-display: 'Noto Serif Display', serif;
+// Open Sans - Light 300, Light 300 Italic, Regular 400, Regular 400 Italic, Medium 500, Medium 500 Italic, Semi-bold 600, Semi-bold Italic, Bold 700, Bold 700 Italic, Extra-bold 800, Extra-bold 800 italic
+$open-sans: 'Open Sans', sans-serif;
+
+//Colors
+$rubine-red-44: hsl(340, 81%, 44%);
+$rubine-red-60: hsl(340, 81%, 60%);
+$rubine-red-75: hsl(340, 81%, 75%);
+$bright-navy-blue-20: hsl(212, 56%, 20%);
+$bright-navy-blue-47: hsl(212, 56%, 47%);
+$bright-navy-blue-60: hsl(212, 60%, 60%);
+$bright-navy-blue-75: hsl(212, 75%, 75%);
+$dark-sienna-7: hsl(348, 100%, 7%);
+$dark-sienna-12: hsl(348, 100%, 12%);
+$dark-sienna-24: hsl(348, 100%, 24%);
+$ghost-white-99: hsl(240, 100%, 99%);
+$ghost-white-92: hsl(240, 100%, 92%);
+$ghost-white-80: hsl(240, 100%, 80%);
+$gainsboro-92: hsl(170, 15%, 92%);
+$gainsboro-81: hsl(170, 15%, 81%);
+$gainsboro-56: hsl(170, 15%, 56%);
+
+$footer-height: 5rem;
+
+a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 200ms ease-in-out;
+}
+
+a:hover {
+    text-decoration-color: inherit;
+}
+
+button {
+    color: inherit;
+    background-color: $rubine-red-44;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    margin: 0.5rem;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+button:active {
+    background-color: $rubine-red-60;
+}
+
+.form {
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    margin: 2rem auto;
+    input {
+      margin-bottom: 2rem;
+      font-size: inherit;
+    }
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        input {
+            margin: 0.1rem;
+            max-width: 6rem;
+        }
+        label {
+            font-size: 1.25rem;
+        }
+    }
+    .text {
+        justify-content: end;
+    }
+  }
+
+.submit {
+    background-color: $rubine-red-44;
+    color: $ghost-white-99;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.25rem 0;
+}
+
+.content-container {
+    width: 90%;
+    max-width: 1500px;
+    margin: auto;
+}
