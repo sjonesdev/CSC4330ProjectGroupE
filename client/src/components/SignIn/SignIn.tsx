@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import APIRequestHandler from '../common/APIRequestHandler';
 
 interface SignInProps {
     setSignedIn: Function
@@ -11,6 +12,8 @@ interface SignInState {
     signedIn: boolean
     user: boolean
     error: any
+    username: string
+    password: string
 }
  
 class SignIn extends React.Component<SignInProps, SignInState> {
@@ -19,7 +22,9 @@ class SignIn extends React.Component<SignInProps, SignInState> {
         this.state = { 
             ...props,
             user: false,
-            error: null
+            error: null,
+            username: "",
+            password: "",
         };
     }
 
@@ -30,25 +35,28 @@ class SignIn extends React.Component<SignInProps, SignInState> {
     async handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         try {
-            let user = await this.login(event.target);
-            this.setState({ user, signedIn: user });
-            this.state.setSignedIn(user);
+            let token = await APIRequestHandler.instance.login(this.state.username, this.state.password);
+            document.cookie = encodeURIComponent(`username=${this.state.username};token=${token};secure;samesite=strict;max-age=${30*24*60*60}`);
+            this.setState({ signedIn: true });
+            this.state.setSignedIn(true);
         } catch (error) {
             this.setState({ error });
         }
     }
 
     render() { 
+        console.log(document.cookie);
         return (
             <div className="signin">
                 {this.state.signedIn && <Navigate to="/" replace={true} />}
                 <h1>Sign In</h1>
+                {this.state.error ? <h4>Please Enter a Valid Username & Password</h4> : <></>}
                 <form className='form' onSubmit={(event: React.FormEvent<HTMLFormElement>) => this.handleSubmit(event)} method="get">
                     <label htmlFor="username">Username</label>
-                    <input type="text" name='username' />
+                    <input type="text" name='username' onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({ username: event.target.value })} />
 
                     <label htmlFor="pass">Password</label>
-                    <input type="password" name="pass" />
+                    <input type="password" name="pass" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({ password: event.target.value })} />
                     
                     <input type="submit" className="submit" value="Sign In" />
                 </form>

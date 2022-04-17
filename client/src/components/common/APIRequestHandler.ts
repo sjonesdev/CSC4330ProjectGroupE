@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import crypto from 'crypto';
 const axiosInstance = axios.create({baseURL: 'https://localhost:8000'});
 
@@ -23,6 +23,29 @@ interface SearchProps {
     maxPrice: number,
     tag: string,
     maxAgeHours: number
+}
+
+const setCookie = (cname: string, cvalue: string, exdays: number) => {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    let expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;samesite=strict;secure";
+}
+
+const getCookie = (cname: string): string => {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }
 
 class DummyAPIRequestHandler {
@@ -152,7 +175,7 @@ class DummyAPIRequestHandler {
                     DummyAPIRequestHandler.loggedIn = true;
                     DummyAPIRequestHandler.loggedInUsername = username;
                 }
-                valid ? resolve(true) : resolve(false);
+                valid ? resolve(true) : reject("Invalid login info");
             }, DummyAPIRequestHandler.testTimeout);
         });
     }
@@ -387,7 +410,7 @@ export default class APIRequestHandler {
 
     static instance: APIRequestHandler = new APIRequestHandler();
     static loggedIn = false;
-    static loggedInUsername = "";
+    static sessionLengthDays = 14;
     
     private constructor() {
         if(useDummyAPI) {
@@ -395,30 +418,12 @@ export default class APIRequestHandler {
         }
     }
 
+    getLoggedIn() {
+        return getCookie('username');
+    }
+
 
     // GET Requests
-
-    getLoggedIn() {
-        return APIRequestHandler.loggedInUsername;
-    }
-
-    //give username and password in request body, get user_info with id, username, and something else and token for auth in response
-    login(username: string, password: string): Promise<boolean> {
-        APIRequestHandler.loggedInUsername = username;
-        return axios.get('/login', {
-            params: {
-                username,
-                password
-            }
-        });
-    }
-
-    logout(username: string): Promise<boolean> {
-        APIRequestHandler.loggedInUsername = "";
-        return axios.get('/logout', {
-            params: {username}
-        });
-    }
 
     getProfile(username: string): Promise<ProfileProps> {
         return axiosInstance.get('/profile/' + username);
@@ -440,6 +445,51 @@ export default class APIRequestHandler {
 
     // POST Requests
     
+    //give username and password in request body, get user_info with id, username, and something else and token for auth in response
+    async login(username: string, password: string): Promise<boolean> {
+        let loggedIn = this.getLoggedIn();
+        if(loggedIn.length != 0) throw new Error(`Already logged in with username ${loggedIn}.`);
+        let err = false;
+        let token = await axios.post('/login', {
+            params: {
+                username,
+                password
+            }
+        }).then((response: AxiosResponse<any,any>) => {
+            return response.data['token'];
+        }).catch((error) => {
+            err = true;
+            return error;
+        });
+        if(!err) {
+            setCookie("username", username, 14);
+            setCookie("token", token, 14);
+            return true;
+        } 
+        console.log(token);
+        return false;
+    }
+
+    async logout(username: string): Promise<boolean> {
+        if(username === this.getLoggedIn()) {
+            let err = false;
+            await axios.post('/logout', {
+                params: {username}
+            }).then((response) => {
+                console.log(response);
+                setCookie("username", "", -1);
+                setCookie("token", "", -1);
+                return response;
+            }).catch((error) => {
+                console.log(error);
+                err = true;
+                return error;
+            });
+            return !err;
+        }
+        return false
+    }
+
     createProfile(profile: ProfileProps, password: string): Promise<boolean> {
         return axiosInstance.post('/profile', {...profile, password});
     }
