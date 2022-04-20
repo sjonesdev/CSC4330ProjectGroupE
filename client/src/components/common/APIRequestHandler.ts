@@ -21,7 +21,7 @@ interface SearchProps {
     keywords: string,
     minPrice: number,
     maxPrice: number,
-    tag: string,
+    tag: string[],
     maxAgeHours: number
 }
 
@@ -135,8 +135,8 @@ class DummyAPIRequestHandler {
         return found ? i : -1;
     }
 
-    private findWishlist(username: string): Object[] {
-        let wishlist: Object[] = [];
+    private findWishlist(username: string): string[] {
+        let wishlist: string[] = [];
         for(let i = 0; i < DummyAPIRequestHandler.database.wishlists.length; i++) {
             if(DummyAPIRequestHandler.database.listings[i].username === username) {
                 wishlist = DummyAPIRequestHandler.database.wishlists[i].listingIDs;
@@ -240,6 +240,20 @@ class DummyAPIRequestHandler {
                 resolve(listings);
             })
         });
+    }
+
+    getUserWishlist(username: string): Promise<ListingProps[]> {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const ids = this.findWishlist(username);
+                const listings = [];
+                for(let id of ids) {
+                    const idx = this.findListing(id);
+                    if(idx >= 0) listings.push(DummyAPIRequestHandler.database.listings[idx]);
+                }
+                resolve(listings);
+            })
+        })
     }
 
 
@@ -415,6 +429,8 @@ export default class APIRequestHandler {
     private constructor() {
         if(useDummyAPI) {
             APIRequestHandler.instance = new DummyAPIRequestHandler();
+        } else {
+            if(this.getLoggedIn()) APIRequestHandler.loggedIn = true;
         }
     }
 
@@ -426,20 +442,36 @@ export default class APIRequestHandler {
     // GET Requests
 
     getProfile(username: string): Promise<ProfileProps> {
-        return axiosInstance.get('/profile/' + username);
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
+        return axiosInstance.get(encodeURIComponent('/profile/' + username));
+    }
+
+    getUserListings(username: string): Promise<ListingProps[]> {
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
+        return axiosInstance.get(encodeURIComponent('/listing/' + username));
     }
 
     getListing(listingID: string): Promise<ListingProps> {
-        return axiosInstance.get('/listing/' + listingID);
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
+        return axiosInstance.get(encodeURIComponent('/listing/' + listingID));
     }
 
     getListings(searchParams: SearchProps): Promise<ListingProps[]> {
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
+        let searchStr = ""
         return axiosInstance.get(
-            '/listing', 
+            encodeURIComponent('/listingsquery/' + searchStr), 
             {
-                params: searchParams
+                params: {
+                    token: ""
+                }
             }
         );
+    }
+
+    getUserWishlist(username: string): Promise<ListingProps[]> {
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
+        return axiosInstance.get(encodeURIComponent('/wishlist/' + username));
     }
 
 
@@ -456,6 +488,7 @@ export default class APIRequestHandler {
                 password
             }
         }).then((response: AxiosResponse<any,any>) => {
+            APIRequestHandler.loggedIn = true;
             return response.data['token'];
         }).catch((error) => {
             err = true;
@@ -477,6 +510,7 @@ export default class APIRequestHandler {
                 params: {username}
             }).then((response) => {
                 console.log(response);
+                APIRequestHandler.loggedIn = false;
                 setCookie("username", "", -1);
                 setCookie("token", "", -1);
                 return response;
@@ -491,29 +525,24 @@ export default class APIRequestHandler {
     }
 
     createProfile(profile: ProfileProps, password: string): Promise<boolean> {
-        return axiosInstance.post('/profile', {...profile, password});
+        return axiosInstance.post(encodeURIComponent('/profile'), {...profile, password});
     }
     
     createListing(listing: ListingProps): Promise<boolean> {
-        return axiosInstance.post('/listing', {...listing});
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
+        return axiosInstance.post(encodeURIComponent('/listing'), {...listing});
     }
 
     async addWishlistListing(username: string, listingID: string): Promise<boolean> {
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
         const response = await axios.get('/wishlist/' + username);
         let curListings = response.data.listings;
         curListings.push(listingID);
-        return axios.put('/wishlist/' + username, { listings: curListings });
-    }
-    
-    updateProfile(username: string, newProfile: ProfileProps): Promise<boolean> {
-        return axios.put('/profile/' + username, {...newProfile});
-    }
-
-    updateListing(listingID: string, newListing: ListingProps): Promise<boolean> {
-        return axios.put('/profile/' + listingID, {...newListing});
-    }
+        return axios.put(encodeURIComponent('/wishlist/' + username), { listings: curListings });
+    }      
 
     async removeWishlistListing(username: string, listingID: string): Promise<boolean> {
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
         const response = await axios.get('/wishlist/' + username);
         let curListings = response.data.listings;
         for (let i in curListings) {
@@ -522,18 +551,32 @@ export default class APIRequestHandler {
                 curListings.splice(i, 1);
             }
         }
-        return axios.put('/wishlist/' + username, { listings: curListings });
+        return axios.put(encodeURIComponent('/wishlist/' + username), { listings: curListings });
     }
+
+
+    // PUT Requests
+    updateListing(listingID: string, newListing: ListingProps): Promise<boolean> {
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
+        return axios.put(encodeURIComponent('/profile/' + listingID), {...newListing});
+    }
+
+    updateProfile(username: string, newProfile: ProfileProps): Promise<boolean> {
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
+        return axios.put(encodeURIComponent('/profile/' + username), {...newProfile});
+    } 
 
 
     // DELETE Requests
 
     deleteProfile(username: string): Promise<boolean> {
-        return axios.delete('/profile/' + username);
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
+        return axios.delete(encodeURIComponent('/profile/' + username));
     }
 
     deleteListing(listingID: string): Promise<boolean> {
-        return axios.delete('/listing/' + listingID);
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
+        return axios.delete(encodeURIComponent('/listing/' + listingID));
     }
 
 }
