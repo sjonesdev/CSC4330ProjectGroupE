@@ -443,27 +443,45 @@ export default class APIRequestHandler {
 
     getProfile(username: string): Promise<ProfileProps> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.get(encodeURIComponent('/profile/' + username));
+        return axiosInstance.get(encodeURIComponent('/profile/' + username),
+        {
+            params: {
+                token: getCookie("token")
+            }
+        }
+        );
     }
 
     getUserListings(username: string): Promise<ListingProps[]> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.get(encodeURIComponent('/listing/' + username));
+        return axiosInstance.get(encodeURIComponent('/listing/' + username),
+            {
+                params: {
+                    token: getCookie("token")
+                }
+            }
+        );
     }
 
     getListing(listingID: string): Promise<ListingProps> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.get(encodeURIComponent('/listing/' + listingID));
+        return axiosInstance.get(encodeURIComponent('/listing/' + listingID),
+            {
+                params: {
+                    token: getCookie("token")
+                }
+            }
+        );
     }
 
     getListings(searchParams: SearchProps): Promise<ListingProps[]> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         let searchStr = ""
         return axiosInstance.get(
-            encodeURIComponent('/listingsquery/' + searchStr), 
+            encodeURIComponent('/listingsquery/' + searchStr),
             {
                 params: {
-                    token: ""
+                    token: getCookie("token")
                 }
             }
         );
@@ -471,7 +489,13 @@ export default class APIRequestHandler {
 
     getUserWishlist(username: string): Promise<ListingProps[]> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.get(encodeURIComponent('/wishlist/' + username));
+        return axiosInstance.get(encodeURIComponent('/wishlist/' + username),
+            {
+                params: {
+                    token: getCookie("token")
+                }
+            }
+        );
     }
 
 
@@ -530,7 +554,10 @@ export default class APIRequestHandler {
     
     createListing(listing: ListingProps): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.post(encodeURIComponent('/listing'), {...listing});
+        return axiosInstance.post(encodeURIComponent('/listing'), {
+            ...listing,
+            token: getCookie('token')
+        });
     }
 
     async addWishlistListing(username: string, listingID: string): Promise<boolean> {
@@ -538,7 +565,10 @@ export default class APIRequestHandler {
         const response = await axios.get('/wishlist/' + username);
         let curListings = response.data.listings;
         curListings.push(listingID);
-        return axios.put(encodeURIComponent('/wishlist/' + username), { listings: curListings });
+        return axios.put(encodeURIComponent('/wishlist/' + username), { 
+            listings: curListings,
+            token: getCookie('token')
+         });
     }      
 
     async removeWishlistListing(username: string, listingID: string): Promise<boolean> {
@@ -551,19 +581,28 @@ export default class APIRequestHandler {
                 curListings.splice(i, 1);
             }
         }
-        return axios.put(encodeURIComponent('/wishlist/' + username), { listings: curListings });
+        return axios.put(encodeURIComponent('/wishlist/' + username), { 
+            listings: curListings,
+            token: getCookie('token')
+         });
     }
 
 
     // PUT Requests
     updateListing(listingID: string, newListing: ListingProps): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axios.put(encodeURIComponent('/profile/' + listingID), {...newListing});
+        return axios.put(encodeURIComponent('/profile/' + listingID), {
+            ...newListing,
+            token: getCookie('token')
+        });
     }
 
     updateProfile(username: string, newProfile: ProfileProps): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axios.put(encodeURIComponent('/profile/' + username), {...newProfile});
+        return axios.put(encodeURIComponent('/profile/' + username), {
+            ...newProfile,
+            token: getCookie('token')
+        });
     } 
 
 
@@ -571,12 +610,24 @@ export default class APIRequestHandler {
 
     deleteProfile(username: string): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axios.delete(encodeURIComponent('/profile/' + username));
+        return axios.delete(encodeURIComponent('/profile/' + username),
+            {
+                params: {
+                    token: getCookie("token")
+                }
+            }
+        );
     }
 
     deleteListing(listingID: string): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axios.delete(encodeURIComponent('/listing/' + listingID));
+        return axios.delete(encodeURIComponent('/listing/' + listingID),
+            {
+                params: {
+                    token: getCookie("token")
+                }
+            }
+        );
     }
 
 }
