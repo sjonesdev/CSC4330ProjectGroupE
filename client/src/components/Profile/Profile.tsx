@@ -9,6 +9,9 @@ interface ProfileProps {
  
 interface ProfileState {
     username: string
+    name: string
+    contact: string
+    desc: string
     signedIn: boolean
     showEditForm: boolean
     newName: string
@@ -28,18 +31,29 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         super(props);
         this.state = {   
             ...props,
+            name: "",
+            contact: "",
+            desc: "",
             showEditForm: false,
             newName: "",
             newPhone: "",
             newPassword: "",
             confirmPassword: "",
         };
+        this.getUpdatedProfileInfo();
         this.editProfileClick = this.editProfileClick.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     getUpdatedProfileInfo() {
-        APIRequestHandler.instance.getProfile(APIRequestHandler.instance.getLoggedIn());
+        let prof = this;
+        APIRequestHandler.instance.getProfile(APIRequestHandler.instance.getLoggedIn()).then((res) => {
+            prof.setState({
+                username: res.email,
+                name: res.name,
+                contact: res.contact
+            });
+        });
     }
 
     editProfileClick() {
@@ -83,9 +97,9 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 {this.state.signedIn ? <></> : <Navigate to="/signin" />}
                 <div className="profile-info">
                     <img src="" alt="" className="profile-img" />
-                    <h2 className='profile-name'>John Doe</h2>
-                    <h3 className="profile-email">email@example.com</h3>
-                    <h3 className="profile-contact">Contact: <span className="profile-contact-pref">No preference</span></h3>
+                    <h2 className='profile-name'>{this.state.name}</h2>
+                    <h3 className="profile-email">{this.state.username}</h3>
+                    <h3 className="profile-contact">Contact: <span className="profile-contact-pref">{this.state.contact}</span></h3>
                     <p className="profile-desc">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti esse deleniti rerum harum ipsa doloribus. Possimus, ipsam libero. Deleniti mollitia nulla iusto excepturi porro voluptate, animi non optio sed tempora.
                     </p>
