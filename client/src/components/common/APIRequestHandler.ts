@@ -18,11 +18,11 @@ interface ListingProps {
 }
 
 interface SearchProps {
-    keywords: string,
-    minPrice: number,
-    maxPrice: number,
-    tag: string[],
-    maxAgeHours: number
+    keywords?: string,
+    minPrice?: number,
+    maxPrice?: number,
+    tags?: string[],
+    maxAgeHours?: number
 }
 
 const setCookie = (cname: string, cvalue: string, exdays: number) => {
@@ -30,14 +30,6 @@ const setCookie = (cname: string, cvalue: string, exdays: number) => {
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     let expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/; samesite=strict; secure";
-    console.log("set cookie to " + document.cookie);
-}
-
-const setUsernameTokenCookie = (username: string, token: string, exdays: number) => {
-    const d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    let expires = "expires="+ d.toUTCString();
-    document.cookie = "username=" + username + "; " + "token=" + token + "; " + expires + "; path=/; samesite=strict; secure";
     console.log("set cookie to " + document.cookie);
 }
 
@@ -456,11 +448,11 @@ export default class APIRequestHandler {
     getProfile(username: string): Promise<ProfileProps> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         return axiosInstance.get(encodeURIComponent('/profile/' + username),
-        {
-            params: {
-                token: getCookie("token")
+            {
+                params: {
+                    token: getCookie("token")
+                }
             }
-        }
         );
     }
 
@@ -489,6 +481,12 @@ export default class APIRequestHandler {
     getListings(searchParams: SearchProps): Promise<ListingProps[]> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         let searchStr = ""
+        let key: keyof typeof searchParams;
+        for(key in searchParams) {
+            if(searchParams[key] !== undefined) {
+                searchStr += `?${key}=${searchParams[key]}`
+            }
+        }
         return axiosInstance.get(
             encodeURIComponent('/listingsquery/' + searchStr),
             {
