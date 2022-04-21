@@ -5,7 +5,7 @@ const axiosInstance = axios.create({baseURL: 'https://localhost:8000'});
 interface ProfileProps {
     email: string,
     name: string,
-    phone: string
+    contact: string
 }
 
 interface ListingProps {
@@ -29,19 +29,28 @@ const setCookie = (cname: string, cvalue: string, exdays: number) => {
     const d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     let expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;samesite=strict;secure";
+    document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/; samesite=strict; secure";
+    console.log("set cookie to " + document.cookie);
+}
+
+const setUsernameTokenCookie = (username: string, token: string, exdays: number) => {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    let expires = "expires="+ d.toUTCString();
+    document.cookie = "username=" + username + "; " + "token=" + token + "; " + expires + "; path=/; samesite=strict; secure";
+    console.log("set cookie to " + document.cookie);
 }
 
 const getCookie = (cname: string): string => {
     let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
+    let cookie = document.cookie;
+    let ca = cookie.split(';');
     for(let i = 0; i <ca.length; i++) {
         let c = ca[i];
-        while (c.charAt(0) == ' ') {
+        while (c.charAt(0) === ' ') {
         c = c.substring(1);
         }
-        if (c.indexOf(name) == 0) {
+        if (c.indexOf(name) === 0) {
         return c.substring(name.length, c.length);
         }
     }
@@ -60,7 +69,7 @@ class DummyAPIRequestHandler {
                 email: 'email@example.com',
                 password: 'pass',
                 name: 'john doe',
-                phone: '9995550000'
+                contact: '9995550000'
             }
         ],
         listings: [
@@ -161,10 +170,11 @@ class DummyAPIRequestHandler {
     // GET Requests
     
     getLoggedIn() {
-        return DummyAPIRequestHandler.loggedInUsername;
+        return getCookie("username");
     }
 
     login(username: string, password: string): Promise<boolean> {
+        console.log("login");
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 let userIndex = this.findProfile(username);
@@ -173,14 +183,18 @@ class DummyAPIRequestHandler {
                     valid = true;
                     DummyAPIRequestHandler.loggedInUser = userIndex;
                     DummyAPIRequestHandler.loggedIn = true;
-                    DummyAPIRequestHandler.loggedInUsername = username;
+                    setCookie("username", username, 14);
+                    setCookie("token", "dummytoken", 14);
                 }
-                valid ? resolve(true) : reject("Invalid login info");
+                if(valid) resolve(true); 
+                else throw new Error("Invalid login info");
             }, DummyAPIRequestHandler.testTimeout);
         });
     }
 
-    logout(username: string): Promise<boolean> {
+    logout(username?: string): Promise<boolean> {
+        console.log("logout");
+        if(!username) username = this.getLoggedIn();
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 let valid = false;
@@ -188,7 +202,8 @@ class DummyAPIRequestHandler {
                     valid = true;
                     DummyAPIRequestHandler.loggedInUser = -1;
                     DummyAPIRequestHandler.loggedIn = false;
-                    DummyAPIRequestHandler.loggedInUsername = "";
+                    setCookie("username", "", 0);
+                    setCookie("token", "", 0);
                 }
                 valid ? resolve(true) : resolve(false);
             }, DummyAPIRequestHandler.testTimeout);
@@ -201,7 +216,7 @@ class DummyAPIRequestHandler {
                 resolve({
                     email: 'email@example.com',
                     name: 'john doe',
-                    phone: '9995550000'
+                    contact: '9995550000'
                 });
             }, DummyAPIRequestHandler.testTimeout);
         });
@@ -427,11 +442,8 @@ export default class APIRequestHandler {
     static sessionLengthDays = 14;
     
     private constructor() {
-        if(useDummyAPI) {
-            APIRequestHandler.instance = new DummyAPIRequestHandler();
-        } else {
-            if(this.getLoggedIn()) APIRequestHandler.loggedIn = true;
-        }
+        if(getCookie('username')) APIRequestHandler.loggedIn = true;
+        if(useDummyAPI) return new DummyAPIRequestHandler();
     }
 
     getLoggedIn() {
@@ -504,7 +516,7 @@ export default class APIRequestHandler {
     //give username and password in request body, get user_info with id, username, and something else and token for auth in response
     async login(username: string, password: string): Promise<boolean> {
         let loggedIn = this.getLoggedIn();
-        if(loggedIn.length != 0) throw new Error(`Already logged in with username ${loggedIn}.`);
+        if(loggedIn.length !== 0) throw new Error(`Already logged in with username ${loggedIn}.`);
         let err = false;
         let token = await axios.post('/login', {
             params: {
@@ -527,7 +539,8 @@ export default class APIRequestHandler {
         return false;
     }
 
-    async logout(username: string): Promise<boolean> {
+    async logout(username?: string): Promise<boolean> {
+        if(!username) username = this.getLoggedIn();
         if(username === this.getLoggedIn()) {
             let err = false;
             await axios.post('/logout', {

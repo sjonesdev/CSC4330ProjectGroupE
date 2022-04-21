@@ -21,18 +21,23 @@ library.add(faMagnifyingGlass);
 interface AppState {
   signedIn: boolean
   defaultSearchKeyword: string
+  refresh: boolean
 }
 
+const sessionsEnabled = true;
 class App extends React.Component<Object, AppState> {
 
   constructor(props?: Object) {
     super(props ? props : {});
     this.state = {
-      signedIn: false,
-      defaultSearchKeyword: ""
+      signedIn: APIRequestHandler.instance.getLoggedIn() !== "",
+      defaultSearchKeyword: "",
+      refresh: false,
     };
+    if(!sessionsEnabled && this.state.signedIn) APIRequestHandler.instance.logout(APIRequestHandler.instance.getLoggedIn());
     this.setSignedIn = this.setSignedIn.bind(this);
     this.setDefaultSearch = this.setDefaultSearch.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   setSignedIn(signedIn: boolean) {
@@ -41,6 +46,12 @@ class App extends React.Component<Object, AppState> {
 
   setDefaultSearch(defaultSearchKeyword: string) {
     this.setState({defaultSearchKeyword})
+  }
+
+  handleLogout() {
+    console.log("logging out");
+    APIRequestHandler.instance.logout();
+    this.setState({ refresh: !this.state.refresh });
   }
 
   render() {
@@ -69,6 +80,12 @@ class App extends React.Component<Object, AppState> {
             <li>
               <Link to="/search">Search</Link>
             </li>
+            <li>
+              <button
+                  onClick={this.handleLogout}>
+                Logout
+              </button>
+            </li>
           </ul>
         </nav>
 
@@ -80,7 +97,7 @@ class App extends React.Component<Object, AppState> {
           <Route path="/signin" element={this.state.signedIn ? <Navigate to="/" /> : <SignIn signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
           <Route path="/signup" element={this.state.signedIn ? <Navigate to="/" /> : <SignUp signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
           <Route path="/search" element={<Search defaultSearch={this.state.defaultSearchKeyword} />} />
-          <Route path="/logout" element={() => {APIRequestHandler.instance.logout(APIRequestHandler.instance.getLoggedIn()); return (<Navigate to="/" />)}} />
+          {/* <Route path="/logout" element={signedIn ? logout()} /> */}
         </Routes>
         
         <Footer />
@@ -88,6 +105,12 @@ class App extends React.Component<Object, AppState> {
 
     );
   }
+}
+
+function doLogout() {
+  console.log("logging out");
+  APIRequestHandler.instance.logout();
+  return (<Navigate to="/" />);
 }
 
 export default App;

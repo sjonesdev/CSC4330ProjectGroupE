@@ -12,7 +12,7 @@ interface SignUpFormData {
     password: string,
     confirmPassword: string,
     name: string,
-    phone: string
+    contact: string
 }
  
 interface SignUpState {
@@ -37,7 +37,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
             email: "",
             password: "",
             confirmPassword: "",
-            phone: "",
+            contact: "",
             name: ""
         }
         this.handleChange = this.handleChange.bind(this);
@@ -58,7 +58,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
             let profInfo = {
                 email: this.formData.email,
                 name: this.formData.name,
-                phone: this.formData.phone
+                contact: this.formData.contact
             }
             if(this.formData.password === this.formData.confirmPassword) {
                 let success = await APIRequestHandler.instance.createProfile(profInfo, this.formData.password);
@@ -83,7 +83,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
                     <label htmlFor="name">Name</label>
                     <input type="name" name="name" id="name" onChange={this.handleChange} />
 
-                    <label htmlFor="phone">Phone</label>
+                    <label htmlFor="phone">Contact Preference</label>
                     <input type="phone" name="phone" id="phone" onChange={this.handleChange} />
 
                     <label htmlFor="password">Password</label>

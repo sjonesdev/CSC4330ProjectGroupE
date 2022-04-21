@@ -38,6 +38,10 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    getUpdatedProfileInfo() {
+        APIRequestHandler.instance.getProfile(APIRequestHandler.instance.getLoggedIn());
+    }
+
     editProfileClick() {
         this.setState({showEditForm: !this.state.showEditForm});
     }
