@@ -22,7 +22,8 @@ interface SearchProps {
     minPrice?: number,
     maxPrice?: number,
     tags?: string[],
-    maxAgeHours?: number
+    maxAgeHours?: number,
+    username?: string
 }
 
 const setCookie = (cname: string, cvalue: string, exdays: number) => {

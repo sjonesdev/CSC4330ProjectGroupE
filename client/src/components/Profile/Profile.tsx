@@ -43,6 +43,8 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         this.getUpdatedProfileInfo();
         this.editProfileClick = this.editProfileClick.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.displayListings = this.displayListings.bind(this);
+        this.displayWishlist = this.displayWishlist.bind(this);
     }
 
     getUpdatedProfileInfo() {
@@ -64,22 +66,39 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         event.preventDefault();
     }
 
+    displayListings() {
+        APIRequestHandler.instance.getListings({ username: this.state.username });
+        
+    }
+
+    displayWishlist() {
+        return (
+            <>
+                <h3>Wishlist</h3>
+
+            </>
+        );
+    }
+
     getExtras() {
         if(APIRequestHandler.instance.getLoggedIn() == this.state.username) {
             if(this.state.showEditForm) {
                 return (
-                    <form className='form' onSubmit={this.handleSubmit}>
-                        <label htmlFor="newName">New Name</label>
-                        <input type="text" name="newName" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newName: event.target.value})} />
-                        <label htmlFor="newPhone">New Phone Number</label>
-                        <input type="text" name="newPhone" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newPhone: event.target.value})} />
-                        <label htmlFor="newPassword">New Password</label>
-                        <input type="password" name="newPassword" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newPassword: event.target.value})} />
-                        <label htmlFor="confirmPassword">Confirm Password</label>
-                        <input type="password" name="confirmPassword" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({confirmPassword: event.target.value})} />
-                        <button className="submit" onClick={this.editProfileClick}>Cancel</button>
-                        <input type="submit" className='submit' value="Save" />
-                    </form>
+                    <>
+                        {this.displayWishlist()}
+                        <form className='form' onSubmit={this.handleSubmit}>
+                            <label htmlFor="newName">New Name</label>
+                            <input type="text" name="newName" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newName: event.target.value})} />
+                            <label htmlFor="newPhone">New Phone Number</label>
+                            <input type="text" name="newPhone" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newPhone: event.target.value})} />
+                            <label htmlFor="newPassword">New Password</label>
+                            <input type="password" name="newPassword" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newPassword: event.target.value})} />
+                            <label htmlFor="confirmPassword">Confirm Password</label>
+                            <input type="password" name="confirmPassword" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({confirmPassword: event.target.value})} />
+                            <button className="submit" onClick={this.editProfileClick}>Cancel</button>
+                            <input type="submit" className='submit' value="Save" />
+                        </form>
+                    </>
                 );
             } else {
                 return (
@@ -107,11 +126,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 </div>
                 <div className = "Listings">
                     <h3>Listings</h3>
-                    <ListingPreview />
-                </div>
-                <div className = "WishList">
-                    <h3>Wishlist</h3>
-                    <ListingPreview />
+                    {this.displayListings()}
                 </div>
                 {this.getExtras()}
             </div>
