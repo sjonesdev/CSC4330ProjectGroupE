@@ -11,15 +11,22 @@ from server import serializers
 
 class AllListings(APIView):
     def get(self, request):
-        title = request.query_params.get('title')
+        keywords = request.query_params.get('keywords')
+        if keywords:
+            keywords = keywords.split()
         tag = request.query_params.get('tag')
         description = request.query_params.get('description')
         priceUpper = request.query_params.get('priceH')
         priceLower = request.query_params.get('priceL')
         username = request.query_params.get('username')
         listings = Listing.objects.all()
-        if title:
-            listings = listings.filter(title__icontains=title)
+
+        if keywords:
+            for keyword in keywords:
+                listings = listings.filter(title__icontains=keyword)
+
+        #if title:
+         #   listings = listings.filter(title__icontains=title)
         if tag:
             listings = listings.filter(tags__name__iexact=tag)
         if description:
