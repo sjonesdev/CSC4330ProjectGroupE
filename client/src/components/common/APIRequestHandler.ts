@@ -643,3 +643,5 @@ export default class APIRequestHandler {
     }
 
 }
+
+export type { ProfileProps, ListingProps, SearchProps };

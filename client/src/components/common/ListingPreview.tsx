@@ -1,25 +1,18 @@
 import * as React from 'react';
+import { ListingProps } from './APIRequestHandler';
 
-interface ListingPreviewProps {
-    
-}
- 
-interface ListingPreviewState {
-    
-}
- 
-class ListingPreview extends React.Component<ListingPreviewProps, ListingPreviewState> {
-    constructor(props: ListingPreviewProps) {
+class ListingPreview extends React.Component<ListingProps, any> {
+    constructor(props: ListingProps) {
         super(props);
-        this.state = {  };
+        this.state = { };
     }
     render() { 
         return ( 
             <div className="listing-preview">
                 <img src="" alt="" className="preview-img" />
-                <h3 className="preview-title">Listing</h3>
-                <h4 className="preview-post-date">2 hours ago</h4>
-                <p className="preview-desc">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Non suscipit, consectetur praesentium odio cumque sit culpa consequatur cupiditate natus! Nobis sed at nam vitae autem ex nemo illum hic soluta?</p>
+                <h3 className="preview-title">{this.props.title}</h3>
+                {/* <h4 className="preview-post-date"></h4> */}
+                <p className="preview-desc">{this.props.desc}</p>
             </div>
         );
     }

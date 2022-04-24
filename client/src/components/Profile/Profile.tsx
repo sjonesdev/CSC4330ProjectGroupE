@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import APIRequestHandler from '../common/APIRequestHandler';
+import APIRequestHandler, { ListingProps } from '../common/APIRequestHandler';
 import ListingPreview from '../common/ListingPreview';
 interface ProfileProps {
     username: string
@@ -18,6 +18,7 @@ interface ProfileState {
     newPhone: string
     newPassword: string
     confirmPassword: string
+    userListings: ListingProps[]
 }
 
 interface ProfileStateChange {
@@ -39,6 +40,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             newPhone: "",
             newPassword: "",
             confirmPassword: "",
+            userListings: []
         };
         this.getUpdatedProfileInfo();
         this.editProfileClick = this.editProfileClick.bind(this);
@@ -56,6 +58,11 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 contact: res.contact
             });
         });
+        APIRequestHandler.instance.getListings({ username: this.state.username }).then((res) => {
+            prof.setState({
+                userListings: res
+            });
+        });
     }
 
     editProfileClick() {
@@ -67,8 +74,15 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     }
 
     displayListings() {
-        APIRequestHandler.instance.getListings({ username: this.state.username });
-        
+        const out = [];
+        let key = 0;
+        for(let listing of this.state.userListings) {
+            out.push(
+                <ListingPreview key={key++} {...listing} />
+            );
+        }
+        if(out.length === 0) out.push(<p>No Listings</p>);
+        return out;
     }
 
     displayWishlist() {
