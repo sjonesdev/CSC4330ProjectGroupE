@@ -222,17 +222,35 @@ class DummyAPIRequestHandler {
         });
     }
 
-    getListing(listingID: string): Promise<ListingProps> {
+    // getListing(listingID: string): Promise<ListingProps> {
+    //     return new Promise((resolve, reject) => {
+    //         setTimeout(() => {
+    //             resolve({
+    //                 listingID: 'abc123',
+    //                 title: 'example',
+    //                 desc: 'this is a listing',
+    //                 username: 'email@example.com',
+    //                 price: 999,
+    //                 contact: 'N/A'
+    //             });
+    //         }, DummyAPIRequestHandler.testTimeout);
+    //     });
+    // }
+
+    getListing(username: string, title: string): Promise<ListingProps> {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                resolve({
-                    listingID: 'abc123',
-                    title: 'example',
-                    desc: 'this is a listing',
-                    username: 'email@example.com',
-                    price: 999,
-                    contact: 'N/A'
-                });
+                const prof = this.findProfile(username);
+                if(prof >= 0) {
+                    const username = DummyAPIRequestHandler.database.profiles[prof].email;
+                    for(const listing of DummyAPIRequestHandler.database.listings) {
+                        if(listing.username === username && listing.title === title) {
+                            resolve(listing);
+                            return;
+                        }
+                    }
+                }
+                reject(new Error("User or listing does not exist"));
             }, DummyAPIRequestHandler.testTimeout);
         });
     }
@@ -478,9 +496,20 @@ export default class APIRequestHandler {
         );
     }
 
-    getListing(listingID: string): Promise<ListingProps> {
+    // getListing(listingID: string): Promise<ListingProps> {
+    //     if(!APIRequestHandler.loggedIn) new Promise(() => null);
+    //     return axiosInstance.get(encodeURIComponent('/listing/' + listingID),
+    //         {
+    //             params: {
+    //                 token: getCookie("token")
+    //             }
+    //         }
+    //     );
+    // }
+
+    getListing(username: string, title: string): Promise<ListingProps> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.get(encodeURIComponent('/listing/' + listingID),
+        return axiosInstance.get(encodeURIComponent('/listing/' + username + "/" + title),
             {
                 params: {
                     token: getCookie("token")

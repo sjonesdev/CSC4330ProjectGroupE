@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useParams } from 'react-router-dom';
 
 
 // Component Imports
@@ -16,6 +16,7 @@ import Footer from './components/common/Footer';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import APIRequestHandler from './components/common/APIRequestHandler';
+import NotFound from './components/common/NotFound';
 library.add(faMagnifyingGlass);
 
 interface AppState {
@@ -103,10 +104,11 @@ class App extends React.Component<Object, AppState> {
           <Route path="/" element={<Home signedIn={this.state.signedIn} setDefaultSearchKeyword={this.setDefaultSearch} />} />
           <Route path="/about" element={<About />} />
           <Route path="/profile" element={<Profile username={APIRequestHandler.instance.getLoggedIn()} signedIn={this.state.signedIn} />} />
-          <Route path="/listing" element={<Listing />} />
+          <Route path="/listing/:user/:title" element={<ListingProxy />} />
           <Route path="/signin" element={this.state.signedIn ? <Navigate to="/" /> : <SignIn signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
           <Route path="/signup" element={this.state.signedIn ? <Navigate to="/" /> : <SignUp signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
           <Route path="/search" element={this.state.signedIn ? <Search defaultSearch={this.state.defaultSearchKeyword} /> : <Navigate to="/signin" /> } />
+          <Route path="/notfound" element={<NotFound />} />
         </Routes>
 
         <Footer />
@@ -114,6 +116,13 @@ class App extends React.Component<Object, AppState> {
 
     );
   }
+}
+
+function ListingProxy() {
+  let { user, title } = useParams();
+  return (
+    <Listing username={user ? decodeURIComponent(user) : ""} title={title ? decodeURIComponent(title) : ""} />
+  )
 }
 
 export default App;
