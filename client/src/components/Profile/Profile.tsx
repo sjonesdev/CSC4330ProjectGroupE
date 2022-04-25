@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import APIRequestHandler, { ListingProps } from '../common/APIRequestHandler';
+import APIRequestHandler, { ListingProps, UserProfileProps } from '../common/APIRequestHandler';
 import ListingPreview from '../common/ListingPreview';
 interface ProfileProps {
     username: string
@@ -71,6 +71,15 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
 
     handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        const req: UserProfileProps = {
+            email: this.state.username,
+            name: this.state.newName.length === 0 ? this.state.name : this.state.newName,
+            contact: this.state.newPhone.length === 0 ? this.state.contact : this.state.newPhone,
+        };
+        const prof = this;
+        APIRequestHandler.instance.updateProfile(this.props.username, req).then(() => {
+            prof.getUpdatedProfileInfo();
+        });
     }
 
     displayListings() {
@@ -86,6 +95,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     }
 
     displayWishlist() {
+
         return (
             <>
                 <h3>Wishlist</h3>
@@ -95,7 +105,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     }
 
     getExtras() {
-        if(APIRequestHandler.instance.getLoggedIn() == this.state.username) {
+        if(APIRequestHandler.instance.getLoggedIn() === this.state.username) {
             if(this.state.showEditForm) {
                 return (
                     <>
@@ -110,7 +120,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                             <label htmlFor="confirmPassword">Confirm Password</label>
                             <input type="password" name="confirmPassword" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({confirmPassword: event.target.value})} />
                             <button className="submit" onClick={this.editProfileClick}>Cancel</button>
-                            <input type="submit" className='submit' value="Save" />
+                            <button type="submit" className='submit'>Save</button>
                         </form>
                     </>
                 );
@@ -133,9 +143,9 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                     <h2 className='profile-name'>{this.state.name}</h2>
                     <h3 className="profile-email">{this.state.username}</h3>
                     <h3 className="profile-contact">Contact: <span className="profile-contact-pref">{this.state.contact}</span></h3>
-                    <p className="profile-desc">
+                    {/* <p className="profile-desc">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti esse deleniti rerum harum ipsa doloribus. Possimus, ipsam libero. Deleniti mollitia nulla iusto excepturi porro voluptate, animi non optio sed tempora.
-                    </p>
+                    </p> */}
 
                 </div>
                 <div className = "Listings">

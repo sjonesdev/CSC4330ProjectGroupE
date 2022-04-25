@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import crypto from 'crypto';
 const axiosInstance = axios.create({baseURL: 'https://localhost:8000'});
 
-interface ProfileProps {
+interface UserProfileProps {
     email: string,
     name: string,
     contact: string
@@ -58,7 +58,7 @@ class DummyAPIRequestHandler {
     private static database = {
         profiles: [
             {
-                email: 'email@example.com',
+                email: 'email@columbus.edu',
                 password: 'pass',
                 name: 'john doe',
                 contact: '9995550000'
@@ -69,7 +69,7 @@ class DummyAPIRequestHandler {
                 listingID: 'abc123',
                 title: 'example',
                 desc: 'this is a listing',
-                username: 'email@example.com',
+                username: 'email@columbus.edu',
                 price: 999,
                 contact: 'N/A'
             },
@@ -77,7 +77,7 @@ class DummyAPIRequestHandler {
                 listingID: 'abc12',
                 title: 'example2',
                 desc: 'this is a listing2',
-                username: 'email@example.com',
+                username: 'email@columbus.edu',
                 price: 100,
                 contact: 'N/A'
             },
@@ -85,7 +85,7 @@ class DummyAPIRequestHandler {
                 listingID: 'abc1',
                 title: 'example3',
                 desc: 'this is a listing3',
-                username: 'email@example.com',
+                username: 'email@columbus.edu',
                 price: 2,
                 contact: 'no thanks'
             },
@@ -93,7 +93,7 @@ class DummyAPIRequestHandler {
                 listingID: 'abc',
                 title: 'example4',
                 desc: 'this is a listing4',
-                username: 'email@example.com',
+                username: 'email@columbus.edu',
                 price: 4.50,
                 contact: 'email'
             },
@@ -101,14 +101,14 @@ class DummyAPIRequestHandler {
                 listingID: 'ab',
                 title: 'example5',
                 desc: 'this is a listing5',
-                username: 'email@example.com',
+                username: 'email@columbus.edu',
                 price: 27089.283094739,
                 contact: '9997774444'
             }
         ],
         wishlists: [
             {
-                username: 'email@example.com',
+                username: 'email@columbus.com',
                 listingIDs: ['ab', 'abc']
             }
         ]
@@ -213,14 +213,12 @@ class DummyAPIRequestHandler {
         });
     }
 
-    getProfile(username: string): Promise<ProfileProps> {
+    getProfile(username: string): Promise<UserProfileProps> {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                resolve({
-                    email: 'email@example.com',
-                    name: 'john doe',
-                    contact: '9995550000'
-                });
+                const prof = this.findProfile(username);
+                if(prof >= 0) resolve(DummyAPIRequestHandler.database.profiles[prof]);
+                else reject(new Error(`No user ${username}`));
             }, DummyAPIRequestHandler.testTimeout);
         });
     }
@@ -277,7 +275,7 @@ class DummyAPIRequestHandler {
 
     // POST Requests
     
-    createProfile(profile: ProfileProps, password: string): Promise<boolean> {
+    createProfile(profile: UserProfileProps, password: string): Promise<boolean> {
         let found = this.findProfile(profile.email);
         if(found < 0) {
             DummyAPIRequestHandler.database.profiles.push({...profile, password});
@@ -323,10 +321,13 @@ class DummyAPIRequestHandler {
         }
     }
     
-    updateProfile(username: string, newProfile: ProfileProps): Promise<boolean> {
+    updateProfile(username: string, newProfile: UserProfileProps): Promise<boolean> {
         let prof = this.findProfile(username);
+        console.log(username, prof);
         if(prof >= 0) {
+            console.log("changing database");
             DummyAPIRequestHandler.database.profiles[prof] = {...newProfile, password: DummyAPIRequestHandler.database.profiles[prof].password};
+            console.log(DummyAPIRequestHandler.database.profiles[prof]);
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
                     resolve(true);
@@ -456,7 +457,7 @@ export default class APIRequestHandler {
 
     // GET Requests
 
-    getProfile(username: string): Promise<ProfileProps> {
+    getProfile(username: string): Promise<UserProfileProps> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         return axiosInstance.get(encodeURIComponent('/profile/' + username),
             {
@@ -570,7 +571,7 @@ export default class APIRequestHandler {
         return false
     }
 
-    createProfile(profile: ProfileProps, password: string): Promise<boolean> {
+    createProfile(profile: UserProfileProps, password: string): Promise<boolean> {
         return axiosInstance.post(encodeURIComponent('/profile'), {...profile, password});
     }
     
@@ -619,7 +620,7 @@ export default class APIRequestHandler {
         });
     }
 
-    updateProfile(username: string, newProfile: ProfileProps): Promise<boolean> {
+    updateProfile(username: string, newProfile: UserProfileProps): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         return axios.put(encodeURIComponent('/profile/' + username), {
             ...newProfile,
@@ -654,4 +655,4 @@ export default class APIRequestHandler {
 
 }
 
-export type { ProfileProps, ListingProps, SearchProps };
+export type { UserProfileProps, ListingProps, SearchProps };
