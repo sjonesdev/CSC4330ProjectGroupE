@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from 'axios';
-import crypto from 'crypto';
 const axiosInstance = axios.create({baseURL: 'https://localhost:8000'});
 
 interface UserProfileProps {
@@ -294,7 +293,7 @@ class DummyAPIRequestHandler {
     }
     
     createListing(listing: ListingProps): Promise<boolean> {
-        let listingID = crypto.randomUUID();
+        let listingID = "" + DummyAPIRequestHandler.database.listings.length;//crypto.randomUUID();
         DummyAPIRequestHandler.database.listings.push({...listing, listingID});
         return new Promise((resolve, reject) => {
             setTimeout(() => {

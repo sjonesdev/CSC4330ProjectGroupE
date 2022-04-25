@@ -14,11 +14,16 @@ interface ProfileState {
     desc: string
     signedIn: boolean
     showEditForm: boolean
+    showNewListingForm: boolean
     newName: string
     newPhone: string
     newPassword: string
     confirmPassword: string
+    listTitle: string
+    listDesc: string
+    listPrice: string
     userListings: ListingProps[]
+    userWishlist: ListingProps[]
 }
 
 interface ProfileStateChange {
@@ -36,14 +41,21 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             contact: "",
             desc: "",
             showEditForm: false,
+            showNewListingForm: false,
             newName: "",
             newPhone: "",
             newPassword: "",
             confirmPassword: "",
-            userListings: []
+            listTitle: "",
+            listDesc: "",
+            listPrice: "",
+            userListings: [],
+            userWishlist: [],
         };
         this.getUpdatedProfileInfo();
+        this.newListingClick = this.newListingClick.bind(this);
         this.editProfileClick = this.editProfileClick.bind(this);
+        this.handleNewListing = this.handleNewListing.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.displayListings = this.displayListings.bind(this);
         this.displayWishlist = this.displayWishlist.bind(this);
@@ -63,10 +75,37 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 userListings: res
             });
         });
+        if(APIRequestHandler.instance.getLoggedIn() === this.state.username) {
+            APIRequestHandler.instance.getUserWishlist(this.state.username).then((res) => {
+                prof.setState({
+                    userWishlist: res
+                });
+            });
+        }
+    }
+
+    newListingClick() {
+        this.setState({showNewListingForm: !this.state.showNewListingForm});
     }
 
     editProfileClick() {
         this.setState({showEditForm: !this.state.showEditForm});
+    }
+
+    handleNewListing(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        const req: ListingProps = {
+            listingID: "",
+            title: this.state.listTitle,
+            desc: this.state.listDesc,
+            username: this.state.username,
+            price: parseFloat(this.state.listPrice),
+            contact: this.state.contact
+        }
+        const prof = this;
+        APIRequestHandler.instance.createListing(req).then(() => {
+            prof.getUpdatedProfileInfo();
+        });
     }
 
     handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -83,7 +122,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     }
 
     displayListings() {
-        const out = [];
+        const out = [], wishlist = this.state.userWishlist;//await APIRequestHandler.instance.getUserWishlist(this.state.username);
         let key = 0;
         for(let listing of this.state.userListings) {
             out.push(
@@ -95,42 +134,76 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     }
 
     displayWishlist() {
+        const out = [];
+        let key = 0;
+        for(let listing of this.state.userWishlist) {
+            out.push(
+                <ListingPreview key={key++} {...listing} />
+            );
+        }
+        if(out.length === 0) out.push(<p key={0}>No Wishlist</p>);
+        return out;
+    }
 
-        return (
-            <>
-                <h3>Wishlist</h3>
+    getNewListingForm() {
+        if(this.state.showNewListingForm) {
+            return (
+                <form className='form' onSubmit={this.handleNewListing}>
+                    <label htmlFor="listTitle">Title</label>
+                    <input type="text" name="listTitle" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({listTitle: event.target.value})} />
+                    <label htmlFor="listDesc">Description</label>
+                    <input type="text" name="newPhone" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({listDesc: event.target.value})} />
+                    <label htmlFor="listPrice">Price</label>
+                    <input type="number" name="listPrice" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({listPrice: event.target.value})} />
+                    <button className="submit" onClick={this.newListingClick}>Cancel</button>
+                    <button type="submit" className='submit'>Post</button>
+                </form>
+            );
+        } else {
+            return (
+                <div className="listing-creator">
+                    <button onClick={this.newListingClick}>New Listing</button>
+                </div>
+            );
+        }
+    }
 
-            </>
-        );
+    getEditForm() {
+        if(this.state.showEditForm) {
+            return (
+                <form className='form' onSubmit={this.handleSubmit}>
+                    <label htmlFor="newName">New Name</label>
+                    <input type="text" name="newName" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newName: event.target.value})} />
+                    <label htmlFor="newPhone">New Phone Number</label>
+                    <input type="text" name="newPhone" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newPhone: event.target.value})} />
+                    <label htmlFor="newPassword">New Password</label>
+                    <input type="password" name="newPassword" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newPassword: event.target.value})} />
+                    <label htmlFor="confirmPassword">Confirm Password</label>
+                    <input type="password" name="confirmPassword" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({confirmPassword: event.target.value})} />
+                    <button className="submit" onClick={this.editProfileClick}>Cancel</button>
+                    <button type="submit" className='submit'>Save</button>
+                </form>
+            );
+        } else {
+            return (
+                <div className="profile-editor">
+                    <button onClick={this.editProfileClick}>Edit Profile</button>
+                </div>
+            );
+        }
     }
 
     getExtras() {
         if(APIRequestHandler.instance.getLoggedIn() === this.state.username) {
-            if(this.state.showEditForm) {
-                return (
-                    <>
-                        {this.displayWishlist()}
-                        <form className='form' onSubmit={this.handleSubmit}>
-                            <label htmlFor="newName">New Name</label>
-                            <input type="text" name="newName" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newName: event.target.value})} />
-                            <label htmlFor="newPhone">New Phone Number</label>
-                            <input type="text" name="newPhone" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newPhone: event.target.value})} />
-                            <label htmlFor="newPassword">New Password</label>
-                            <input type="password" name="newPassword" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newPassword: event.target.value})} />
-                            <label htmlFor="confirmPassword">Confirm Password</label>
-                            <input type="password" name="confirmPassword" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({confirmPassword: event.target.value})} />
-                            <button className="submit" onClick={this.editProfileClick}>Cancel</button>
-                            <button type="submit" className='submit'>Save</button>
-                        </form>
-                    </>
-                );
-            } else {
-                return (
-                    <div className="profile-editor">
-                        <button onClick={this.editProfileClick}>Edit Profile</button>
-                    </div>
-                );
-            }
+            return (
+                <>
+                    {this.getNewListingForm()}
+                    <h3>Wishlist</h3>
+                    {this.displayWishlist()}
+
+                    {this.getEditForm()}
+                </>
+            )
         }
     }
 
