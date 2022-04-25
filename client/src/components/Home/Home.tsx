@@ -8,25 +8,18 @@ interface HomeProps {
     setDefaultSearchKeyword: Function
 }
  
-interface HomeState {
-    signedIn: boolean
-    setDefaultSearchKeyword: Function
-}
- 
-class Home extends React.Component<HomeProps, HomeState> {
+class Home extends React.Component<HomeProps, Object> {
     
     constructor(props: HomeProps) {
         super(props);
-        this.state = {
-            ...props
-        };
+        this.state = { };
     }
 
     getHomeInputs() {
-        if(this.state.signedIn) {
+        if(this.props.signedIn) {
             return (
                 <div className="inputs-container">
-                    <SearchBar setSearchKeyword={this.state.setDefaultSearchKeyword} defaultValue={""} inSearchPage={false} />
+                    <SearchBar setSearchKeyword={this.props.setDefaultSearchKeyword} defaultValue={""} inSearchPage={false} />
                 </div>
             );
         } else {

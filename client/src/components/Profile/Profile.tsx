@@ -81,7 +81,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 <ListingPreview key={key++} {...listing} />
             );
         }
-        if(out.length === 0) out.push(<p>No Listings</p>);
+        if(out.length === 0) out.push(<p key={0}>No Listings</p>);
         return out;
     }
 

@@ -21,7 +21,6 @@ library.add(faMagnifyingGlass);
 interface AppState {
   signedIn: boolean
   defaultSearchKeyword: string
-  refresh: boolean
 }
 
 const sessionsEnabled = true;
@@ -32,7 +31,6 @@ class App extends React.Component<Object, AppState> {
     this.state = {
       signedIn: APIRequestHandler.instance.getLoggedIn() !== "",
       defaultSearchKeyword: "",
-      refresh: false,
     };
     if(!sessionsEnabled && this.state.signedIn) APIRequestHandler.instance.logout(APIRequestHandler.instance.getLoggedIn());
     this.setSignedIn = this.setSignedIn.bind(this);
@@ -41,7 +39,7 @@ class App extends React.Component<Object, AppState> {
   }
 
   setSignedIn(signedIn: boolean) {
-    this.setState({ signedIn });
+    this.setState({ signedIn });//, () => { this.forceUpdate(); console.log(this.state); } );
   }
 
   setDefaultSearch(defaultSearchKeyword: string) {
@@ -51,7 +49,7 @@ class App extends React.Component<Object, AppState> {
   handleLogout() {
     console.log("logging out");
     APIRequestHandler.instance.logout();
-    this.setState({ refresh: !this.state.refresh });
+    this.setSignedIn(false);
   }
 
   render() {
@@ -96,21 +94,14 @@ class App extends React.Component<Object, AppState> {
           <Route path="/listing" element={<Listing />} />
           <Route path="/signin" element={this.state.signedIn ? <Navigate to="/" /> : <SignIn signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
           <Route path="/signup" element={this.state.signedIn ? <Navigate to="/" /> : <SignUp signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
-          <Route path="/search" element={<Search defaultSearch={this.state.defaultSearchKeyword} />} />
-          {/* <Route path="/logout" element={signedIn ? logout()} /> */}
+          <Route path="/search" element={this.state.signedIn ? <Search defaultSearch={this.state.defaultSearchKeyword} /> : <Navigate to="/signin" /> } />
         </Routes>
-        
+
         <Footer />
       </Router>
 
     );
   }
-}
-
-function doLogout() {
-  console.log("logging out");
-  APIRequestHandler.instance.logout();
-  return (<Navigate to="/" />);
 }
 
 export default App;

@@ -53,7 +53,6 @@ const getCookie = (cname: string): string => {
 class DummyAPIRequestHandler {
     private static loggedInUser: number;
     static loggedIn = false;
-    static loggedInUsername = "";
 
     static testTimeout = 300;//ms
     private static database = {
@@ -114,6 +113,14 @@ class DummyAPIRequestHandler {
             }
         ]
     };
+
+    constructor() {
+        const u = getCookie('username')
+        if(u) {
+            DummyAPIRequestHandler.loggedInUser = this.findProfile(u);
+            DummyAPIRequestHandler.loggedIn = true;
+        }
+    }
 
     private findProfile(username: string): number {
         let found = false, i;
@@ -191,7 +198,10 @@ class DummyAPIRequestHandler {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 let valid = false;
+                console.log("lg1")
+                
                 if(DummyAPIRequestHandler.loggedInUser >= 0 && DummyAPIRequestHandler.database.profiles[DummyAPIRequestHandler.loggedInUser].email === username) {
+                    console.log("lg")
                     valid = true;
                     DummyAPIRequestHandler.loggedInUser = -1;
                     DummyAPIRequestHandler.loggedIn = false;
