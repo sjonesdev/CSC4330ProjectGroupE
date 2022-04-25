@@ -103,6 +103,7 @@ class App extends React.Component<Object, AppState> {
         <Routes>
           <Route path="/" element={<Home signedIn={this.state.signedIn} setDefaultSearchKeyword={this.setDefaultSearch} />} />
           <Route path="/about" element={<About />} />
+          <Route path="/profile/:user" element={<ProfileProxy signedIn={this.state.signedIn} />} />
           <Route path="/profile" element={<Profile username={APIRequestHandler.instance.getLoggedIn()} signedIn={this.state.signedIn} />} />
           <Route path="/listing/:user/:title" element={<ListingProxy />} />
           <Route path="/signin" element={this.state.signedIn ? <Navigate to="/" /> : <SignIn signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
@@ -116,6 +117,16 @@ class App extends React.Component<Object, AppState> {
 
     );
   }
+}
+
+function ProfileProxy(props: {signedIn: boolean}) {
+  let { user } = useParams();
+  return (
+    <Profile 
+      username={user ? decodeURIComponent(user) : APIRequestHandler.instance.getLoggedIn()} 
+      signedIn={props.signedIn} 
+    />
+  );
 }
 
 function ListingProxy() {
