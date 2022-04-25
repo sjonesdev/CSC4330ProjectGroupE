@@ -1,0 +1,13 @@
+@use '../lib';
+
+.listing-preview {
+    background: lib.$bright-navy-blue-60; 
+    margin: 1rem;
+    box-shadow: lib.$card;
+    border: lib.$shaded 2px solid;
+    border-radius: 10px;
+
+    p {
+        margin: 1rem;
+    }
+}

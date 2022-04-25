@@ -10,6 +10,7 @@ $rubine-red-44: hsl(340, 81%, 44%);
 $rubine-red-60: hsl(340, 81%, 60%);
 $rubine-red-75: hsl(340, 81%, 75%);
 $bright-navy-blue-20: hsl(212, 56%, 20%);
+$bright-navy-blue-30: hsl(212, 56%, 30%);
 $bright-navy-blue-47: hsl(212, 56%, 47%);
 $bright-navy-blue-60: hsl(212, 60%, 60%);
 $bright-navy-blue-75: hsl(212, 75%, 75%);
@@ -23,7 +24,11 @@ $gainsboro-92: hsl(170, 15%, 92%);
 $gainsboro-81: hsl(170, 15%, 81%);
 $gainsboro-56: hsl(170, 15%, 56%);
 
+$shaded: rgba(0, 0, 0, 0.2);
+
 $footer-height: 5rem;
+
+$card: 0 4px 8px 0 rgba(0,0,0,0.2);
 
 a {
     color: inherit;

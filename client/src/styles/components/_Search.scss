@@ -1,3 +1,22 @@
+@use '../lib';
+
+.search {
+    width: 90%;
+    // height: 100%; 
+    padding: 2rem;
+}
+
+.search-body {
+    display: flex;
+}
+
 .search-params {
-    width: max-content;
+    margin: 0;
+}
+
+.listings-container {
+    width: 100%;
+    margin: 1rem;
+    background: lib.$bright-navy-blue-30;
+    box-shadow: lib.$card;
 }
