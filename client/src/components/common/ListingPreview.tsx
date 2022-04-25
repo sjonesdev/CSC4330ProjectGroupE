@@ -13,6 +13,7 @@ class ListingPreview extends React.Component<ListingProps, any> {
                 <h3 className="preview-title">{this.props.title}</h3>
                 {/* <h4 className="preview-post-date"></h4> */}
                 <p className="preview-desc">{this.props.desc}</p>
+                <span className='price'>{this.props.price}</span>
             </div>
         );
     }

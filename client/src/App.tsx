@@ -52,6 +52,38 @@ class App extends React.Component<Object, AppState> {
     this.setSignedIn(false);
   }
 
+  getLinks() {
+    if(this.state.signedIn) {
+      return (
+        <>
+          <li>
+            <Link to="/profile">Profile</Link>
+          </li>
+          <li>
+            <Link to="/search">Search</Link>
+          </li>
+          <li>
+            <button
+                onClick={this.handleLogout}>
+              Logout
+            </button>
+          </li>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <li>
+            <Link to="/signin">Sign In</Link>
+          </li>
+          <li>
+            <Link to="/signup">Sign Up</Link>
+          </li>
+        </>
+      );
+    }
+  }
+
   render() {
     return (
       <Router>
@@ -63,27 +95,7 @@ class App extends React.Component<Object, AppState> {
             <li>
               <Link to="/about">About</Link>
             </li>
-            <li>
-              <Link to="/profile">Profile</Link>
-            </li>
-            <li>
-              <Link to="/listing">Listings</Link>
-            </li>
-            <li>
-              <Link to="/signin">Sign In</Link>
-            </li>
-            <li>
-              <Link to="/signup">Sign Up</Link>
-            </li>
-            <li>
-              <Link to="/search">Search</Link>
-            </li>
-            <li>
-              <button
-                  onClick={this.handleLogout}>
-                Logout
-              </button>
-            </li>
+            {this.getLinks()}
           </ul>
         </nav>
 
