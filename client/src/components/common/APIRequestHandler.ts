@@ -492,7 +492,7 @@ export default class APIRequestHandler {
 
     getProfile(username: string): Promise<UserProfileProps> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.get(encodeURIComponent('/profile/' + username),
+        return axiosInstance.get('/profile/' + encodeURIComponent(username),
             {
                 params: {
                     token: getCookie("token")
@@ -503,7 +503,7 @@ export default class APIRequestHandler {
 
     getUserListings(username: string): Promise<ListingProps[]> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.get(encodeURIComponent('/listing/' + username),
+        return axiosInstance.get('/listing/' + encodeURIComponent(username),
             {
                 params: {
                     token: getCookie("token")
@@ -525,7 +525,7 @@ export default class APIRequestHandler {
 
     getListing(username: string, title: string): Promise<ListingProps> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.get(encodeURIComponent('/listing/' + username + "/" + title),
+        return axiosInstance.get('/listing/' + encodeURIComponent(username) + "/" + encodeURIComponent(title),
             {
                 params: {
                     token: getCookie("token")
@@ -540,11 +540,11 @@ export default class APIRequestHandler {
         let key: keyof typeof searchParams;
         for(key in searchParams) {
             if(searchParams[key] !== undefined) {
-                searchStr += `?${key}=${searchParams[key]}`
+                searchStr += `?${encodeURIComponent(key)}=${encodeURIComponent("" + searchParams[key])}`
             }
         }
         return axiosInstance.get(
-            encodeURIComponent('/listingsquery/' + searchStr),
+            '/listingsquery/' + searchStr,
             {
                 params: {
                     token: getCookie("token")
@@ -555,7 +555,7 @@ export default class APIRequestHandler {
 
     getUserWishlist(username: string): Promise<ListingProps[]> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.get(encodeURIComponent('/wishlist/' + username),
+        return axiosInstance.get('/wishlist/' + encodeURIComponent(username),
             {
                 params: {
                     token: getCookie("token")
@@ -616,12 +616,12 @@ export default class APIRequestHandler {
     }
 
     createProfile(profile: UserProfileProps, password: string): Promise<boolean> {
-        return axiosInstance.post(encodeURIComponent('/profile'), {...profile, password});
+        return axiosInstance.post('/profile', {...profile, password});
     }
     
     createListing(listing: ListingProps): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.post(encodeURIComponent('/listing'), {
+        return axiosInstance.post('/listing', {
             ...listing,
             token: getCookie('token')
         });
@@ -632,7 +632,7 @@ export default class APIRequestHandler {
         const response = await axios.get('/wishlist/' + username);
         let curListings = response.data.listings;
         curListings.push(listingID);
-        return axios.put(encodeURIComponent('/wishlist/' + username), { 
+        return axios.put('/wishlist/' + encodeURIComponent(username), { 
             listings: curListings,
             token: getCookie('token')
          });
@@ -648,7 +648,7 @@ export default class APIRequestHandler {
                 curListings.splice(i, 1);
             }
         }
-        return axios.put(encodeURIComponent('/wishlist/' + username), { 
+        return axios.put('/wishlist/' + encodeURIComponent(username), { 
             listings: curListings,
             token: getCookie('token')
          });
@@ -658,7 +658,7 @@ export default class APIRequestHandler {
     // PUT Requests
     updateListing(listingID: string, newListing: ListingProps): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axios.put(encodeURIComponent('/profile/' + listingID), {
+        return axios.put('/profile/' + encodeURIComponent(listingID), {
             ...newListing,
             token: getCookie('token')
         });
@@ -666,7 +666,7 @@ export default class APIRequestHandler {
 
     updateProfile(username: string, newProfile: UserProfileProps): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axios.put(encodeURIComponent('/profile/' + username), {
+        return axios.put('/profile/' + encodeURIComponent(username), {
             ...newProfile,
             token: getCookie('token')
         });
@@ -677,7 +677,7 @@ export default class APIRequestHandler {
 
     deleteProfile(username: string): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axios.delete(encodeURIComponent('/profile/' + username),
+        return axios.delete('/profile/' + encodeURIComponent(username),
             {
                 params: {
                     token: getCookie("token")
@@ -688,7 +688,7 @@ export default class APIRequestHandler {
 
     deleteListing(listingID: string): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axios.delete(encodeURIComponent('/listing/' + listingID),
+        return axios.delete('/listing/' + encodeURIComponent(listingID),
             {
                 params: {
                     token: getCookie("token")
