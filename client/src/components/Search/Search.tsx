@@ -94,9 +94,8 @@ class Search extends React.Component<SearchProps, SearchState> {
         let key = 0;
         for(const cat of Search.categories) {
             out.push(
-                <div className="input-wrapper">
+                <div key={key} className="input-wrapper">
                     <input
-                    key={key}
                     id={`tag-input${key}`}
                     type="radio"
                     name="tag"
