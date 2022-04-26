@@ -43,16 +43,19 @@ class Search extends React.Component<SearchProps, SearchState> {
             selectedCategory: typeof props.defaultCategory === "string" ? Search.categories.findIndex((val) => val === props.defaultCategory) : 0
         };
         this.getUpdatedSearchResults = this.getUpdatedSearchResults.bind(this);
-        this.getUpdatedSearchResults();
         this.getSearch = this.getSearch.bind(this);
         this.displaySearch = this.displaySearch.bind(this);
         this.changeCategory = this.changeCategory.bind(this);
     }
 
+    componentDidMount() {
+        this.getUpdatedSearchResults();
+    }
+
     getUpdatedSearchResults(event?: React.FormEvent<HTMLFormElement>) {
         if(event) event.preventDefault();
         const req: {[key: string]: any} = {};
-        if(this.state.defaultSearch.length !== 0) req.defaultSearch = this.state.defaultSearch;
+        if(this.state.defaultSearch.length !== 0) req.keywords = this.state.defaultSearch;
         if(this.state.selectedCategory !== -1 && this.state.selectedCategory < Search.categories.length) req.tag = Search.categories[this.state.selectedCategory];
         if(this.state.minPrice !== -Infinity) req.minPrice = this.state.minPrice;
         if(this.state.maxPrice !== Infinity) req.maxPrice = this.state.maxPrice;

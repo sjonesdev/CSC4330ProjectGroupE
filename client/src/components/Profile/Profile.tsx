@@ -57,13 +57,16 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             userListings: [],
             userWishlist: [],
         };
-        this.getUpdatedProfileInfo();
         this.newListingClick = this.newListingClick.bind(this);
         this.editProfileClick = this.editProfileClick.bind(this);
         this.handleNewListing = this.handleNewListing.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.displayListings = this.displayListings.bind(this);
         this.displayWishlist = this.displayWishlist.bind(this);
+    }
+
+    componentDidMount() {
+        this.getUpdatedProfileInfo();
     }
 
     getUpdatedProfileInfo() {
