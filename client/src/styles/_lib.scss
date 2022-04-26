@@ -6,6 +6,8 @@ $noto-serif-display: 'Noto Serif Display', serif;
 $open-sans: 'Open Sans', sans-serif;
 
 //Colors
+$rubine-red-30: hsl(340, 81%, 30%);
+$rubine-red-37: hsl(340, 81%, 37%);
 $rubine-red-44: hsl(340, 81%, 44%);
 $rubine-red-60: hsl(340, 81%, 60%);
 $rubine-red-75: hsl(340, 81%, 75%);
@@ -58,6 +60,36 @@ button:hover {
 
 button:active {
     background-color: $rubine-red-60;
+}
+
+.connect-btn:hover {
+    transform: scale(1.0);
+    background-color: $rubine-red-37;
+}
+
+.connect-btn {
+    width: 1.5rem;
+    height: 1.4rem;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    display: inline-flex;
+    font-weight: bold;
+}
+
+.connect-btn-left {
+    background-color: $rubine-red-30;
+    border-top-left-radius: 0.7rem;
+    border-bottom-left-radius: 0.7rem;
+    margin-left: 0.5rem;
+}
+
+.connect-btn-right {
+    margin-right: 0.5rem;
+    border-top-right-radius: 0.7rem;
+    border-bottom-right-radius: 0.7rem;
 }
 
 .form {

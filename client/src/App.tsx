@@ -14,10 +14,10 @@ import Footer from './components/common/Footer';
 
 // FontAwesome
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { faMagnifyingGlass, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
 import APIRequestHandler from './components/common/APIRequestHandler';
 import NotFound from './components/common/NotFound';
-library.add(faMagnifyingGlass);
+library.add(faMagnifyingGlass, faPlus, faMinus);
 
 interface AppState {
   signedIn: boolean

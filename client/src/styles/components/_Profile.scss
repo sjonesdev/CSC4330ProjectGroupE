@@ -6,4 +6,15 @@
         width: max-content;
     }
 }
+
+.tag-inputs {
+
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
     
+    .tag-input {
+        width: 90%;
+        margin: 0.5rem auto;
+    }
+}

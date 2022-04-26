@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link, Navigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import APIRequestHandler, { ListingProps, UserProfileProps } from '../common/APIRequestHandler';
 import ListingPreview from '../common/ListingPreview';
 interface ProfileProps {
@@ -22,6 +23,7 @@ interface ProfileState {
     listTitle: string
     listDesc: string
     listPrice: string
+    numTags: number
     listTags: string[]
     userListings: ListingProps[]
     userWishlist: ListingProps[]
@@ -50,6 +52,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             listTitle: "",
             listDesc: "",
             listPrice: "",
+            numTags: 0,
             listTags: [],
             userListings: [],
             userWishlist: [],
@@ -96,6 +99,9 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
 
     handleNewListing(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        for(const tag of this.state.listTags.slice(0, this.state.numTags)) {
+            if(!tag) throw new Error("Invalid tag");
+        }
         const req: ListingProps = {
             listingID: "",
             title: this.state.listTitle,
@@ -103,7 +109,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             username: this.state.username,
             price: parseFloat(this.state.listPrice),
             contact: this.state.contact,
-            tags: this.state.listTags
+            tags: this.state.listTags.slice(0, this.state.numTags)
         }
         const prof = this;
         APIRequestHandler.instance.createListing(req).then(() => {
@@ -148,8 +154,18 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         return out;
     }
 
+    changeTag(index: number, event: React.FormEvent<HTMLInputElement>) {
+        const tags = [...this.state.listTags];
+        tags[index] = event.currentTarget.value;
+        this.setState({ listTags: tags });
+    }
+
     getNewListingForm() {
         if(this.state.showNewListingForm) {
+            const tagInputs = [];
+            for(let i = 0; i < this.state.numTags; i++) {
+                tagInputs.push(<input className='tag-input' type="text" key={i} name={`tag${i+1}`} onChange={e => this.changeTag(i, e)} />)
+            }
             return (
                 <form className='form' onSubmit={this.handleNewListing}>
                     <label htmlFor="listTitle">Title</label>
@@ -158,6 +174,16 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                     <input type="text" name="newPhone" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({listDesc: event.target.value})} />
                     <label htmlFor="listPrice">Price</label>
                     <input type="number" name="listPrice" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({listPrice: event.target.value})} />
+                    <div>
+                        <label>Tags</label>
+                        <button className='connect-btn connect-btn-left' onClick={() => {this.setState({ numTags: this.state.numTags === 0 ? 0 : this.state.numTags - 1 })}}>
+                            <FontAwesomeIcon icon={["fas", "minus"]} />
+                        </button>
+                        <button className='connect-btn connect-btn-right' onClick={() => {this.setState({ numTags: this.state.numTags === 3 ? 3 : this.state.numTags + 1 })}}>
+                            <FontAwesomeIcon icon={["fas", "plus"]} />
+                        </button>
+                    </div>
+                    <div className="tag-inputs">{tagInputs}</div>
                     <button className="submit" onClick={this.newListingClick}>Cancel</button>
                     <button type="submit" className='submit'>Post</button>
                 </form>
