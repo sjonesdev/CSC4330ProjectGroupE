@@ -69,8 +69,7 @@ class Search extends React.Component<SearchProps, SearchState> {
     }
 
     getSearch(keyword: string) {
-        this.setState({ defaultSearch: keyword })
-        this.getUpdatedSearchResults();
+        this.setState({ defaultSearch: keyword }, () => this.getUpdatedSearchResults());
     }
 
     displaySearch() {
