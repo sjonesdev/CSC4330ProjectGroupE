@@ -89,6 +89,17 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         }
     }
 
+    resetNewListing() {
+        this.setState({
+            showNewListingForm: false,
+            listTitle: "",
+            listDesc: "",
+            listPrice: "",
+            numTags: 0,
+            listTags: [],
+        })
+    }
+
     newListingClick() {
         this.setState({showNewListingForm: !this.state.showNewListingForm});
     }
@@ -115,6 +126,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         APIRequestHandler.instance.createListing(req).then(() => {
             prof.getUpdatedProfileInfo();
         });
+        this.resetNewListing();
     }
 
     handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -131,7 +143,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     }
 
     displayListings() {
-        const out = [], wishlist = this.state.userWishlist;//await APIRequestHandler.instance.getUserWishlist(this.state.username);
+        const out = [];//await APIRequestHandler.instance.getUserWishlist(this.state.username);
         let key = 0;
         for(let listing of this.state.userListings) {
             out.push(
@@ -173,13 +185,13 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                     <label htmlFor="listDesc">Description</label>
                     <input type="text" name="newPhone" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({listDesc: event.target.value})} />
                     <label htmlFor="listPrice">Price</label>
-                    <input type="number" name="listPrice" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({listPrice: event.target.value})} />
+                    <input type="text" name="listPrice" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({listPrice: event.target.value})} />
                     <div>
                         <label>Tags</label>
-                        <button className='connect-btn connect-btn-left' onClick={() => {this.setState({ numTags: this.state.numTags === 0 ? 0 : this.state.numTags - 1 })}}>
+                        <button type="button" className='connect-btn connect-btn-left' onClick={() => {this.setState({ numTags: this.state.numTags === 0 ? 0 : this.state.numTags - 1 })}}>
                             <FontAwesomeIcon icon={["fas", "minus"]} />
                         </button>
-                        <button className='connect-btn connect-btn-right' onClick={() => {this.setState({ numTags: this.state.numTags === 3 ? 3 : this.state.numTags + 1 })}}>
+                        <button type="button" className='connect-btn connect-btn-right' onClick={() => {this.setState({ numTags: this.state.numTags === 3 ? 3 : this.state.numTags + 1 })}}>
                             <FontAwesomeIcon icon={["fas", "plus"]} />
                         </button>
                     </div>

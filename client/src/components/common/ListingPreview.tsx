@@ -14,11 +14,11 @@ class ListingPreview extends React.Component<ListingProps, any> {
         let key = 0;
         for(const tag of this.props.tags) {
             out.push(
-                <Link key={key++} to={`/search/${encodeURIComponent(tag)}`}>{tag}</Link>
+                <Link key={key++} to={`/search/${encodeURIComponent(tag)}`}>{tag}</Link>,
+                <span className='no-margin'>{", "}</span>
             )
         }
-
-        return out;
+        return out.splice(0, out.length-1);
     }
 
     render() { 
@@ -27,12 +27,12 @@ class ListingPreview extends React.Component<ListingProps, any> {
                 <img src="" alt="" className="preview-img" />
                 <div className="preview-header">
                     <Link to={`/listing/${encodeURIComponent(this.props.username)}/${this.props.title}`} ><h4 className="preview-title">{this.props.title}</h4></Link>
-                    <span className='preview-tags'>{this.getTags()}</span>
+                    <span className='preview-span preview-tags'>{this.getTags()}</span>
                 </div>
                 {/* <h4 className="preview-post-date"></h4> */}
                 <div className="listing-info">
-                    <span className="preview-desc">{this.props.desc}</span>
-                    <span className='price'>${this.props.price.toFixed(2)}</span>
+                    <span className="preview-span preview-desc">{this.props.desc}</span>
+                    <span className='preview-span price'>${this.props.price.toFixed(2)}</span>
                 </div>
             </div>
         );

@@ -21,7 +21,7 @@ interface SearchProps {
     keywords?: string,
     minPrice?: number,
     maxPrice?: number,
-    tags?: string[],
+    tag?: string,
     maxAgeHours?: number,
     username?: string
 }
@@ -264,7 +264,17 @@ class DummyAPIRequestHandler {
     getListings(searchParams: SearchProps): Promise<ListingProps[]> {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                resolve(DummyAPIRequestHandler.database.listings);
+                const out = [];
+                for(const list of DummyAPIRequestHandler.database.listings) {
+                    let add = true;
+                    if(searchParams.tag && !list.tags.includes(searchParams.tag) && searchParams.tag !== "All") add = false;
+                    if(searchParams.keywords && !list.title.includes(searchParams.keywords)) add = false;
+                    if(searchParams.minPrice && list.price < searchParams.minPrice) add = false;
+                    if(searchParams.maxPrice && list.price > searchParams.maxPrice) add = false;
+                    if(add) out.push(list);
+                }
+                resolve(out);
+
             }, DummyAPIRequestHandler.testTimeout);
         });
     }
