@@ -34,9 +34,9 @@ class About extends React.Component<AboutProps, AboutState> {
                         <ul>
                             <li>Email: example@columbus.edu</li>
                             <li>Phone: (999) 999-9999</li>
-                            <li>Use the form below</li>
+                            {/* <li>Use the form below</li> */}
                         </ul>
-                        <form className='form' action="" method="post">
+                        {/* <form className='form' action="" method="post">
                             <label htmlFor="name">Name</label>
                             <input type="text" id='name' />
                             <label htmlFor="res-email">Response Email</label>
@@ -46,7 +46,7 @@ class About extends React.Component<AboutProps, AboutState> {
                             <label htmlFor="msg">Message</label>
                             <input type="textarea" id="msg" />
                             <input type="submit" className='submit' value="Send" />
-                        </form>
+                        </form> */}
                     </div>
                 </div>
             </div>
