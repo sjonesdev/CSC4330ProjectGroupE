@@ -214,8 +214,8 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 <div className="profile-info">
                     <img src="" alt="" className="profile-img" />
                     <h2 className='profile-name'>{this.state.name}</h2>
-                    <h3 className="profile-email">{this.state.username}</h3>
-                    <h3 className="profile-contact">Contact: <span className="profile-contact-pref">{this.state.contact}</span></h3>
+                    <h4 className="profile-email">{this.state.username}</h4>
+                    <h4 className="profile-contact">Contact: <span className="profile-contact-pref">{this.state.contact}</span></h4>
                     {/* <p className="profile-desc">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti esse deleniti rerum harum ipsa doloribus. Possimus, ipsam libero. Deleniti mollitia nulla iusto excepturi porro voluptate, animi non optio sed tempora.
                     </p> */}

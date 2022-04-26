@@ -7,7 +7,20 @@
     border: lib.$shaded 2px solid;
     border-radius: 10px;
 
-    p {
+    .listing-info {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    span {
         margin: 1rem;
+        font-size: 1.2rem;
+    }
+
+    .price {
+        font-size: 2rem;
+        font-weight: bold;
     }
 }
