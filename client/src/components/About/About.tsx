@@ -20,7 +20,13 @@ class About extends React.Component<AboutProps, AboutState> {
                     <div className="product">
                         <h2>About Columbus List</h2>
                         <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum voluptatum quod ex? Aliquid maxime tenetur rerum reprehenderit nihil porro hic neque cumque. Aspernatur vitae illum itaque magni numquam ab natus.
+                            Columbus List is a platform designed to let students from 
+                            Columbus University advertise items they want to sell, 
+                            look for items they want to buy, and organize transactions 
+                            between each other for these items. With the support of 
+                            university administration, our goal is to allow students to 
+                            forego much of the hassle of shipping while maintaining accountability 
+                            on both sides of the transaction.
                         </p>
                     </div>
                     <div className="team">
