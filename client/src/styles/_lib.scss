@@ -135,3 +135,31 @@ button:active {
     max-width: 1500px;
     margin: auto;
 }
+
+.card-row {
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    margin: 1rem;
+    max-width: 25rem;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+}
+
+.card--alt {
+    justify-content: end;
+}
+
+.card-title {
+    margin: 0;
+}
+
+.photo {
+    width: 100%;
+    box-shadow: 0 4px 8px 0 rgba(200,200,200,0.3);
+}
