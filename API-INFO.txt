@@ -1,4 +1,4 @@
-The backend server runs on 127.0.0.1:8000
+Locally, be default, the backend server runs on 127.0.0.1:8000
 
 To access the admin panel to create Users, Listings, etc. manually,
 go to 127.0.0.1:8000/admin/
@@ -7,26 +7,70 @@ Note: if VS CODE does not recognize "rest_framework" and you
 are in a virtual Python environment, make sure that the Python
 interpreter in the venv folder is selected
 
+Note: POST and PUT requests take in a JSON representation of the object to be edited (use admin panel as easy reference)
+	for a User:
+		username: str up to 255 characters (must be unique)
+		password: str up to 255 characters
+	for a Listing:
+		title: str up to 255 characters (must be unique per user)
+		description: str up to 255 characters
+		price: decimal value up to 10 digits (2 of them right of the decimal point)
+		user: value representing internal ID of the User entry
+		tags: list of str
+	for a WishlistListing:
+		listing: value representing internal ID of the Listing entry
+		user: value representing internal ID of the User entry
+	for a Tag:
+		name: str up to 255 characters (must be unique)
+
 --- API ENDPOINTS ---
 
-127.0.0.1:8000/listings/
-    GET -> returns all listings
+<SERVER ADDRESS>/listings/
+    GET -> returns all listings matching filters (if given)
+		title= (eg. .../listings/?title=bike)
+		tag= (eg. .../listings/?tag=transportation)
+		description= (eg. .../listings/?description=new)
+		priceUpper= (eg. .../listings/?priceUpper=35.00)
+		priceLower=
+		username= (eg. .../listings/?username=bigbob)
+
+	Note: filters can be used in any combination
+		(eg. .../listings/?title=bike&tag=transportation)
+	Note: you can also search by multiple tags
+		(eg. .../listings/?tag=transportation&tag=othertag)
+	Note: for params that have whitespace, a whitespace is %20
+		(eg. .../listings/?description=blue%20and%20red)
+		
+			---> returns all listings that pass filtering based on above
     POST -> add new listing
+    PUT -> updates listing matching filters (required)
+		title=
+		userID=
 
-127.0.0.1:8000/listings/<username>/
-    GET -> returns all listings belong to <username>
+	Note: PUT does not support editing tags at the moment
 
-127.0.0.1:8000/listingsquery/<query>/
-    GET -> returns all listings with <query> in the title (case insensitive)
+    DELETE -> removes listing matching filters (required)
+		title=
+		userID=
 
-127.0.0.1:8000/listings/<username>/<title>/
-    PUT -> updates listing
-    DELETE -> removes listing
+<SERVER ADDRESS>/wishlist/
+    GET -> returns all listings matching filter (required)
+		username= (eg. .../wishlist/?username=bigbob)
+    POST -> add new wishlist listing
+    DELETE -> removes listings matching filters (required)
+		listingID=
+		userID=
 
-127.0.0.1:8000/wishlist/<username>/
-    GET -> returns all listings in <username>'s wishlist
-    POST -> add new wishlist listing for <username>
-
-127.0.0.1:8000/users/
+<SERVER ADDRESS>/users/
     GET -> returns all users
     POST -> add new user
+    PUT -> updates user matching filters (required)
+		username=
+    DELETE-> removes user matching filters (required)
+		username=
+
+<SERVER ADDRESS>/tags/
+    GET -> returns all tags
+    POST -> add new tag
+    DELETE -> removes tag matching filters (required)
+		name=

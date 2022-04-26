@@ -20,9 +20,7 @@ from server import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('listings/', views.AllListings.as_view()),
-    path('listingsquery/<str:query>/', views.ListingsForSearchQuery.as_view()),
-    path('listings/<str:username>/', views.GetListingsForUser.as_view()),
-    path('listings/<str:username>/<str:title>/', views.PutDeleteListingsForUser.as_view()),
-    path('wishlist/<str:username>/', views.WishlistListingsForUser.as_view()),
-    path('users/', views.UserList.as_view())
+    path('wishlist/', views.WishlistListings.as_view()),
+    path('users/', views.UserList.as_view()),
+    path('tags/', views.Tags.as_view())
 ]
