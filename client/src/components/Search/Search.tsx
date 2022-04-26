@@ -122,7 +122,7 @@ class Search extends React.Component<SearchProps, SearchState> {
                     <form className="form search-params" onSubmit={this.getUpdatedSearchResults}>
                         <fieldset>
                             <h3>Filters</h3>
-                            <fieldset>
+                            {/* <fieldset>
                                 <legend>Max Listing Age</legend>
                                 <select name="search-age-limit" id="search-age-limit">
                                     <option value="none">None</option>
@@ -149,7 +149,7 @@ class Search extends React.Component<SearchProps, SearchState> {
                                         <option value="Months">Months</option>
                                     </select>
                                 </div>
-                            </fieldset>
+                            </fieldset> */}
                             <fieldset>
                                 <legend>Price Range</legend>
                                 <div className="input-wrapper">
