@@ -154,9 +154,9 @@ class Search extends React.Component<SearchProps, SearchState> {
                                 <legend>Price Range</legend>
                                 <div className="input-wrapper">
                                     <label htmlFor="min-price">$</label>
-                                    <input type="text" name="min-price" />
+                                    <input type="text" name="min-price" onChange={(e) => this.setState({ minPrice: parseFloat(e.target.value) })} />
                                     <label htmlFor="max-price"> to $</label>
-                                    <input type="text" name="max-price" />
+                                    <input type="text" name="max-price" onChange={(e) => this.setState({ maxPrice: parseFloat(e.target.value) })} />
                                 </div>
                             </fieldset>
                             <fieldset>
