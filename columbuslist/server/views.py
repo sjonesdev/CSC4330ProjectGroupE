@@ -14,6 +14,7 @@ class AllListings(APIView):
         keywords = request.query_params.get('keywords')
         if keywords:
             keywords = keywords.split()
+        title = request.query_params.get('title')
         tag = request.query_params.get('tag')
         description = request.query_params.get('description')
         priceUpper = request.query_params.get('priceH')
@@ -25,8 +26,8 @@ class AllListings(APIView):
             for keyword in keywords:
                 listings = listings.filter(title__icontains=keyword)
 
-        #if title:
-         #   listings = listings.filter(title__icontains=title)
+        if title:
+            listings = listings.filter(title__icontains=title)
         if tag:
             listings = listings.filter(tags__name__iexact=tag)
         if description:
