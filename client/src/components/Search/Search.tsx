@@ -56,7 +56,7 @@ class Search extends React.Component<SearchProps, SearchState> {
         if(this.state.selectedCategory !== -1 && this.state.selectedCategory < Search.categories.length) req.tag = Search.categories[this.state.selectedCategory];
         if(this.state.minPrice !== -Infinity) req.minPrice = this.state.minPrice;
         if(this.state.maxPrice !== Infinity) req.maxPrice = this.state.maxPrice;
-        if(this.state.maxAgeHours !== Infinity) req.maxAgeHours = this.state.maxAgeHours;
+        // if(this.state.maxAgeHours !== Infinity) req.maxAgeHours = this.state.maxAgeHours;
         const prof = this;
         APIRequestHandler.instance.getListings(req).then( (res) => {
             prof.setState({
