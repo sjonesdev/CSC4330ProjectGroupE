@@ -7,6 +7,17 @@
     border: lib.$shaded 2px solid;
     border-radius: 10px;
 
+    .preview-header {
+
+        .preview-title {
+            margin: 0 1rem;
+        }
+        
+        .preview-tags {
+            font-size: 1.0rem;
+        }
+    }
+
     .listing-info {
         display: flex;
         width: 100%;

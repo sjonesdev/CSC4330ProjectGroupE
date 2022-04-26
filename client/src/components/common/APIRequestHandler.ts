@@ -14,6 +14,7 @@ interface ListingProps {
     username: string,
     price: number,
     contact: string
+    tags: string[]
 }
 
 interface SearchProps {
@@ -70,7 +71,8 @@ class DummyAPIRequestHandler {
                 desc: 'this is a listing',
                 username: 'email@columbus.edu',
                 price: 999,
-                contact: 'N/A'
+                contact: 'N/A',
+                tags: ["Electronics"]
             },
             {
                 listingID: 'abc12',
@@ -78,7 +80,8 @@ class DummyAPIRequestHandler {
                 desc: 'this is a listing2',
                 username: 'email@columbus.edu',
                 price: 100,
-                contact: 'N/A'
+                contact: 'N/A',
+                tags: ["Electronics"]
             },
             {
                 listingID: 'abc1',
@@ -86,7 +89,8 @@ class DummyAPIRequestHandler {
                 desc: 'this is a listing3',
                 username: 'email@columbus.edu',
                 price: 2,
-                contact: 'no thanks'
+                contact: 'no thanks',
+                tags: ["Electronics"]
             },
             {
                 listingID: 'abc',
@@ -94,7 +98,8 @@ class DummyAPIRequestHandler {
                 desc: 'this is a listing4',
                 username: 'email@columbus.edu',
                 price: 4.50,
-                contact: 'email'
+                contact: 'email',
+                tags: ["Sports"]
             },
             {
                 listingID: 'ab',
@@ -102,7 +107,8 @@ class DummyAPIRequestHandler {
                 desc: 'this is a listing5',
                 username: 'email@columbus.edu',
                 price: 27089.283094739,
-                contact: '9997774444'
+                contact: '9997774444',
+                tags: ["Jewelery"]
             }
         ],
         wishlists: [

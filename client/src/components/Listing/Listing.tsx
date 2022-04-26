@@ -28,6 +28,7 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
                 username: "",
                 price: Infinity,
                 contact: "",
+                tags: [],
             },
             user: {
                 email: "",
@@ -49,6 +50,18 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
             console.log(res);
             list.setState({ listing: res });
         });
+    }
+
+    getTags() {
+        const out = [];
+        let key = 0;
+        for(const tag of this.state.listing.tags) {
+            out.push(
+                <Link key={key++} to={`/search/${encodeURIComponent(tag)}`}>{tag}</Link>
+            )
+        }
+
+        return out;
     }
 
     render() { 
@@ -76,11 +89,7 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
                     </div>
                     <div className="listing-description">
                         <div className="listing-tags-container">
-                            <div className="listing-tag">
-                                <Link to="/search" className="listing-tag-link">
-                                    No Tag
-                                </Link>
-                            </div>
+                            {this.getTags()}
                         </div>
                         {/* <p className="listing-desc-text">
                             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit eos iusto explicabo adipisci quos, amet totam tempora voluptas beatae voluptatum at assumenda? Ab est dicta eum velit fuga quas hic.

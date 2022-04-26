@@ -5,10 +5,12 @@ import SearchBar from '../common/SearchBar';
 
 interface SearchProps {
     defaultSearch: string
+    defaultCategory?: string
 }
  
 interface SearchState {
     defaultSearch: string
+    defaultCategory: string
     minPrice: number
     maxPrice: number
     tags: string[]
@@ -21,7 +23,8 @@ class Search extends React.Component<SearchProps, SearchState> {
     constructor(props: SearchProps) {
         super(props);
         this.state = {
-            ...props,
+            defaultSearch: props.defaultSearch,
+            defaultCategory: props.defaultCategory ? props.defaultCategory : "All",
             minPrice: -Infinity,
             maxPrice: Infinity,
             tags: [],
@@ -109,39 +112,39 @@ class Search extends React.Component<SearchProps, SearchState> {
                         <fieldset>
                             <legend>Category</legend>
                             <div className="input-wrapper">
-                                <input type="radio" name="tag" id="all" value="All" />
+                                <input type="radio" name="tag" id="all" value="All" checked={this.props.defaultCategory === "All"} />
                                 <label htmlFor="all">All</label>
                             </div>
                             <div className="input-wrapper">
-                                <input type="radio" name="tag" id="electronics" value="Electronics" />
+                                <input type="radio" name="tag" id="electronics" value="Electronics" checked={this.props.defaultCategory === "Electronics"} />
                                 <label htmlFor="electronics">Electronics</label>
                             </div>
                             <div className="input-wrapper">
-                                <input type="radio" name="tag" id="collectibles-art" value="Collectibles & Art" />
+                                <input type="radio" name="tag" id="collectibles-art" value="Collectibles & Art" checked={this.props.defaultCategory === "Collectibles & Art"} />
                                 <label htmlFor="collectibles-art">Collectibles & Art</label>
                             </div>
                             <div className="input-wrapper">
-                                <input type="radio" name="tag" id="home-garden" value="Home & Garden" />
+                                <input type="radio" name="tag" id="home-garden" value="Home & Garden" checked={this.props.defaultCategory === "All"} />
                                 <label htmlFor="collectibles-art">Home & Garden</label>
                             </div>
                             <div className="input-wrapper">
-                                <input type="radio" name="tag" id="clothing-accessories" value="Clothing & Accessories" />
+                                <input type="radio" name="tag" id="clothing-accessories" value="Clothing & Accessories" checked={this.props.defaultCategory === "Clothing & Accessories"} />
                                 <label htmlFor="collectibles-art">Clothing & Accessories</label>
                             </div>
                             <div className="input-wrapper">
-                                <input type="radio" name="tag" id="toys" value="Toys" />
+                                <input type="radio" name="tag" id="toys" value="Toys" checked={this.props.defaultCategory === "Toys"} />
                                 <label htmlFor="collectibles-art">Collectibles & Art</label>
                             </div>
                             <div className="input-wrapper">
-                                <input type="radio" name="tag" id="sporting-goods" value="Sporting Goods" />
+                                <input type="radio" name="tag" id="sporting-goods" value="Sporting Goods" checked={this.props.defaultCategory === "Sporting Goods"} />
                                 <label htmlFor="collectibles-art">Sporting Goods</label>
                             </div>
                             <div className="input-wrapper">
-                                <input type="radio" name="tag" id="business-industrial" value="Business & Industrial" />
+                                <input type="radio" name="tag" id="business-industrial" value="Business & Industrial" checked={this.props.defaultCategory === "Business & Industrial"} />
                                 <label htmlFor="collectibles-art">Business & Industrial</label>
                             </div>
                             <div className="input-wrapper">
-                                <input type="radio" name="tag" id="jewelry-watches" value="Jewelry & Watches" />
+                                <input type="radio" name="tag" id="jewelry-watches" value="Jewelry & Watches" checked={this.props.defaultCategory === "Jewelry & Watches"} />
                                 <label htmlFor="collectibles-art">Jewelry & Watches</label>
                             </div>
                         </fieldset>

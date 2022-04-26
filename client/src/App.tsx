@@ -108,6 +108,7 @@ class App extends React.Component<Object, AppState> {
           <Route path="/listing/:user/:title" element={<ListingProxy />} />
           <Route path="/signin" element={this.state.signedIn ? <Navigate to="/" /> : <SignIn signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
           <Route path="/signup" element={this.state.signedIn ? <Navigate to="/" /> : <SignUp signedIn={this.state.signedIn} setSignedIn={(signedIn: boolean) => this.setSignedIn(signedIn)} />} />
+          <Route path="/search/:category" element={this.state.signedIn ? <SearchProxy /> : <Navigate to="/signin" /> } />
           <Route path="/search" element={this.state.signedIn ? <Search defaultSearch={this.state.defaultSearchKeyword} /> : <Navigate to="/signin" /> } />
           <Route path="/notfound" element={<NotFound />} />
         </Routes>
@@ -127,6 +128,13 @@ function ProfileProxy(props: {signedIn: boolean}) {
       signedIn={props.signedIn} 
     />
   );
+}
+
+function SearchProxy() {
+  let { category } = useParams();
+  return (
+    <Search defaultSearch='' defaultCategory={category ? category : 'All'} />
+  )
 }
 
 function ListingProxy() {

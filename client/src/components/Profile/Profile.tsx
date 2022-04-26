@@ -22,6 +22,7 @@ interface ProfileState {
     listTitle: string
     listDesc: string
     listPrice: string
+    listTags: string[]
     userListings: ListingProps[]
     userWishlist: ListingProps[]
 }
@@ -49,6 +50,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             listTitle: "",
             listDesc: "",
             listPrice: "",
+            listTags: [],
             userListings: [],
             userWishlist: [],
         };
@@ -100,7 +102,8 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             desc: this.state.listDesc,
             username: this.state.username,
             price: parseFloat(this.state.listPrice),
-            contact: this.state.contact
+            contact: this.state.contact,
+            tags: this.state.listTags
         }
         const prof = this;
         APIRequestHandler.instance.createListing(req).then(() => {
