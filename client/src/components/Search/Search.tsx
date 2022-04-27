@@ -56,7 +56,10 @@ class Search extends React.Component<SearchProps, SearchState> {
         if(event) event.preventDefault();
         const req: {[key: string]: any} = {};
         if(this.state.defaultSearch.length !== 0) req.keywords = this.state.defaultSearch;
-        if(this.state.selectedCategory !== -1 && this.state.selectedCategory < Search.categories.length) req.tag = Search.categories[this.state.selectedCategory];
+        if(this.state.selectedCategory !== -1 && this.state.selectedCategory < Search.categories.length) {
+            if(Search.categories[this.state.selectedCategory] !== "All")
+                req.tag = Search.categories[this.state.selectedCategory];
+        }
         if(this.state.minPrice !== -Infinity) req.minPrice = this.state.minPrice;
         if(this.state.maxPrice !== Infinity) req.maxPrice = this.state.maxPrice;
         // if(this.state.maxAgeHours !== Infinity) req.maxAgeHours = this.state.maxAgeHours;
@@ -75,6 +78,7 @@ class Search extends React.Component<SearchProps, SearchState> {
     displaySearch() {
         const out = [];
         let key = 0;
+        if(!this.state.listings) return;
         for(const listing of this.state.listings) {
             out.push(<ListingPreview key={key++} {...listing} />);
         }

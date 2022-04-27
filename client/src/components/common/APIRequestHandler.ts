@@ -499,7 +499,7 @@ class DummyAPIRequestHandler {
     }
 }
 
-let useDummyAPI = false;
+let useDummyAPI = true;
 export default class APIRequestHandler {
 
     static instance: APIRequestHandler = new APIRequestHandler();
@@ -562,7 +562,7 @@ export default class APIRequestHandler {
         );
     }
 
-    getListings(searchParams: SearchProps): Promise<ListingProps[]> {
+    async getListings(searchParams: SearchProps): Promise<ListingProps[]> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         let searchStr = ""
         let key: keyof typeof searchParams;
@@ -571,14 +571,18 @@ export default class APIRequestHandler {
                 searchStr += `?${encodeURIComponent(key)}=${encodeURIComponent("" + searchParams[key])}`
             }
         }
-        return axiosInstance.get(
-            '/listingsquery/' + searchStr,
+        return await axiosInstance.get(
+            '/listings/' + searchStr,
             {
                 data: {
                     token: getCookie("token")
                 }
             }
-        );
+        ).then((res) => {
+            console.log(res);
+            return res.data;
+        });
+        
     }
 
     getUserWishlist(username: string): Promise<WishlistProps[]> {
@@ -654,6 +658,7 @@ export default class APIRequestHandler {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         return axiosInstance.post('/listing', {
             ...listing,
+            description: listing.desc,
             token: getCookie('token')
         });
     }

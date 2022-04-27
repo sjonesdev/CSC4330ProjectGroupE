@@ -21,6 +21,7 @@ interface ListingState {
     newTags: string[]
     newNumTags: number
     deleted: boolean
+    redirectToUpdated: boolean
 }
  
 class Listing extends React.Component<ListingPlusProps, ListingState> {
@@ -51,6 +52,7 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
             newTags: [],
             newNumTags: 0,
             deleted: false,
+            redirectToUpdated: false,
         };
         this.handleEditListing = this.handleEditListing.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -58,14 +60,14 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
 
     componentDidMount() {
         this.getUpdatedInfo();
-        this.setState({ 
-            newTitle: this.state.listing.title,
-            newContact: this.state.listing.contact,
-            newDesc: this.state.listing.desc,
-            newPrice: this.state.listing.price,
-            newTags: this.state.listing.tags, 
-            newNumTags: this.state.listing.tags.length
-        });
+        // this.setState({ 
+        //     newTitle: this.state.listing.title,
+        //     newContact: this.state.listing.contact,
+        //     newDesc: this.state.listing.desc,
+        //     newPrice: this.state.listing.price,
+        //     newTags: this.state.listing.tags, 
+        //     newNumTags: this.state.listing.tags.length
+        // });
     }
 
     getUpdatedInfo() {
@@ -98,16 +100,17 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
         }
         const req: ListingProps = {
             listingID: "",
-            title: this.state.newTitle,
-            desc: this.state.newDesc,
+            title: this.state.newTitle.length === 0 ? this.state.title : this.state.newTitle,
+            desc: this.state.newDesc.length === 0 ? this.state.listing.desc : this.state.newDesc,
+            contact: this.state.newContact.length === 0 ? this.state.listing.contact : this.state.newContact,
             username: this.state.username,
-            price: this.state.newPrice,
-            contact: this.state.newContact,
-            tags: this.state.newTags.slice(0, this.state.newNumTags)
+            price: this.state.newPrice === Infinity ? this.state.listing.price : this.state.newPrice,
+            tags: this.state.newNumTags === 0 ? this.state.listing.tags : this.state.newTags.slice(0, this.state.newNumTags)
         }
         const prof = this;
-        APIRequestHandler.instance.createListing(req).then(() => {
-            prof.componentDidMount();
+        APIRequestHandler.instance.updateListing(this.state.username, this.state.title, req).then(() => {
+            //prof.getUpdatedInfo();
+            this.setState({ redirectToUpdated: true })
         });
     }
 
@@ -125,17 +128,18 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
             }
             return (
                 <form className='form' onSubmit={this.handleEditListing}>
+                    <h3>Only fill out the fields you would like to edit.</h3>
                     <label htmlFor="newTitle">New Title</label>
-                    <input type="text" name="newTitle" value={this.state.newTitle}
+                    <input type="text" name="newTitle"
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newTitle: event.target.value})} />
                     <label htmlFor="newContact">New Contact</label>
-                    <input type="text" name="newContact" value={this.state.newContact} 
+                    <input type="text" name="newContact"
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newContact: event.target.value})} />
                     <label htmlFor="newDesc">New Description</label>
-                    <input type="text" name="newDesc" value={this.state.newDesc}
+                    <input type="text" name="newDesc"
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newDesc: event.target.value})} />
                     <label htmlFor="newPrice">New Price</label>
-                    <input type="text" name="newPrice" value={"" + this.state.newPrice}
+                    <input type="text" name="newPrice"
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newPrice: parseFloat(event.target.value)})} />
                     <div>
                     <label>Tags</label>
@@ -175,6 +179,10 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
     }
 
     render() { 
+        if(this.state.redirectToUpdated) 
+            return (
+                <Navigate to={"/profile"} />//" + encodeURIComponent(this.state.username) + "/" + encodeURIComponent(this.state.newTitle)} />
+            );
         if(!this.state.username || !this.state.title) return (<Navigate to="/notfound" />);
         if(this.state.deleted) return (<Navigate to="/" />)
         return ( 
@@ -202,7 +210,7 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
                             {this.getTags()}
                         </div>
                         <p className="listing-desc-text">
-                            ${this.state.listing.price.toFixed(2)}
+                            ${parseFloat("" + this.state.listing.price).toFixed(2)}
                             <br/>
                             {this.state.listing.desc}
                         </p>
