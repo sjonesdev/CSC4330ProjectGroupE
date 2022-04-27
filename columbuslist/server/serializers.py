@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 class WishlistListingSerializer(serializers.ModelSerializer):
     class Meta:
         model=WishlistListing
-        fields=("listing", "user")
+        fields=("listingTitle", "username", "price")
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:

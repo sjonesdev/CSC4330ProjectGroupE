@@ -86,6 +86,8 @@ class WishlistListings(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # TODO
     def delete(self, request):
         listingID = request.query_params.get('listingID')
         userID = request.query_params.get('userID')
@@ -102,11 +104,28 @@ class UserList(APIView):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
     def post(self, request):
-        serializer = User(data=request.data)
+        serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def options(self, request):
+        return Response({
+            "name": "All Users",
+            "description": "",
+            "renders": [
+                "application/json",
+                "text/html"
+            ],
+            "parses": [
+                "application/json",
+                "application/x-www-form-urlencoded",
+                "multipart/form-data"
+            ],
+            'Access-Control-Allow-Origin': '*'
+        })
+
     def put(self, request):
         username = request.query_params.get('username')
         if username:

@@ -26,8 +26,11 @@ class Listing(models.Model):
         return self.title
 
 class WishlistListing(models.Model):
-    listing=models.ForeignKey(Listing, on_delete=models.CASCADE, null=True)
-    user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    #listing=models.ForeignKey(Listing, on_delete=models.CASCADE, null=True)
+    #user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    listingTitle = models.CharField(max_length=255, default="blank")
+    username = models.CharField(max_length=255, default="blank")
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.listing} {self.user}"
+        return f"{self.listingTitle} {self.username} {self.price}"
