@@ -48,7 +48,7 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
             newTitle: "",
             newContact: "",
             newDesc: "",
-            newPrice: 0,
+            newPrice: Infinity,
             newTags: [],
             newNumTags: 0,
             deleted: false,
@@ -140,7 +140,7 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newDesc: event.target.value})} />
                     <label htmlFor="newPrice">New Price</label>
                     <input type="text" name="newPrice"
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newPrice: parseFloat(event.target.value)})} />
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newPrice: event.target.value.length === 0 ? -1.0 : parseFloat(event.target.value)})} />
                     <div>
                     <label>Tags</label>
                         <button type="button" className='connect-btn connect-btn-left' onClick={() => {this.setState({ newNumTags: this.state.newNumTags === 0 ? 0 : this.state.newNumTags - 1 })}}>
