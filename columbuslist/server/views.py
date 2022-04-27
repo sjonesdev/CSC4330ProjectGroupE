@@ -195,3 +195,20 @@ class Tags(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         tag.delete()
         return Response(status=status.HTTP_202_ACCEPTED)
+    
+class Login(APIView):
+    def get(self, request):
+        username = request.query_params.get('username')
+        password = request.query_params.get('password')
+        users = User.objects.all()
+        if username:
+            users = users.filter(username=username)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        if password:
+            users = users.filter(password=password)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        if len(users) != 1:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return Response(status=status.HTTP_200_OK)

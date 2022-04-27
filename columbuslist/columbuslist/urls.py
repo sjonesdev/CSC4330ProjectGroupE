@@ -22,5 +22,6 @@ urlpatterns = [
     path('listings/', views.AllListings.as_view()),
     path('wishlist/', views.WishlistListings.as_view()),
     path('users/', views.UserList.as_view()),
-    path('tags/', views.Tags.as_view())
+    path('tags/', views.Tags.as_view()),
+    path('login/', views.Login.as_view())
 ]
