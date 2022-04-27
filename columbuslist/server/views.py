@@ -99,6 +99,21 @@ class WishlistListings(APIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 class UserList(APIView):
+    def options(self, request):
+        return Response({
+            "name": "All Users",
+            "description": "",
+            "renders": [
+                "application/json",
+                "text/html"
+            ],
+            "parses": [
+                "application/json",
+                "application/x-www-form-urlencoded",
+                "multipart/form-data"
+            ],
+            "Access-Control-Allow-Origin": "http://localhost:3000/"
+        })
     def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)

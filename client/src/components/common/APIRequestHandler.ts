@@ -522,7 +522,7 @@ export default class APIRequestHandler {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         return axiosInstance.get('/profile/' + encodeURIComponent(username),
             {
-                params: {
+                data: {
                     token: getCookie("token")
                 }
             }
@@ -533,7 +533,7 @@ export default class APIRequestHandler {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         return axiosInstance.get('/listing/' + encodeURIComponent(username),
             {
-                params: {
+                data: {
                     token: getCookie("token")
                 }
             }
@@ -555,7 +555,7 @@ export default class APIRequestHandler {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         return axiosInstance.get('/listing/' + encodeURIComponent(username) + "/" + encodeURIComponent(title),
             {
-                params: {
+                data: {
                     token: getCookie("token")
                 }
             }
@@ -574,7 +574,7 @@ export default class APIRequestHandler {
         return axiosInstance.get(
             '/listingsquery/' + searchStr,
             {
-                params: {
+                data: {
                     token: getCookie("token")
                 }
             }
@@ -585,7 +585,7 @@ export default class APIRequestHandler {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         return axiosInstance.get('/wishlist/' + encodeURIComponent(username),
             {
-                params: {
+                data: {
                     token: getCookie("token")
                 }
             }

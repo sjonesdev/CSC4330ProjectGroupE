@@ -21,6 +21,7 @@ interface SignUpState {
     profileCreated: boolean
     user: boolean
     error: any
+    success: boolean
 }
  
 class SignUp extends React.Component<SignUpProps, SignUpState> {
@@ -32,6 +33,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
             profileCreated: false,
             user: false,
             error: null,
+            success: false,
         };
         this.formData = {
             email: "",
@@ -63,7 +65,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
             if(this.formData.password === this.formData.confirmPassword) {
                 let success = await APIRequestHandler.instance.createProfile(profInfo, this.formData.password);
                 if(success) {
-                    
+                    this.setState({ success })
                 }
             }
         } catch (error) {
@@ -75,6 +77,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
         return (
             <div className="signup">
                 {this.state.signedIn && <Navigate to="/" replace={true} />}
+                {this.state.success && <Navigate to="/signin" replace={true} />}
                 <h1>Sign In</h1>
                 <form className='form' onSubmit={(event: React.FormEvent<HTMLFormElement>) => this.handleSubmit(event)}>
                     <label htmlFor="email">Email</label>
