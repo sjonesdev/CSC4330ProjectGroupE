@@ -585,6 +585,7 @@ export default class APIRequestHandler {
         const params: {[key: string]: any} = {};
         for(key in searchParams) {
             if(searchParams[key] !== undefined) {
+                if(key === "tag" && searchParams[key] === "All") continue;
                 params[key] = encodeURIComponent("" + searchParams[key])
             }
         }
