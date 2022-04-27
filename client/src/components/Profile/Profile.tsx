@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import APIRequestHandler, { ListingProps, UserProfileProps } from '../common/APIRequestHandler';
+import APIRequestHandler, { ListingProps, UserProfileProps, WishlistProps } from '../common/APIRequestHandler';
 import ListingPreview from '../common/ListingPreview';
 interface ProfileProps {
     username: string
@@ -26,7 +26,8 @@ interface ProfileState {
     numTags: number
     listTags: string[]
     userListings: ListingProps[]
-    userWishlist: ListingProps[]
+    userWishlist: WishlistProps[]
+    userWishlistListings: ListingProps[]
 }
 
 interface ProfileStateChange {
@@ -56,6 +57,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             listTags: [],
             userListings: [],
             userWishlist: [],
+            userWishlistListings: [],
         };
         this.newListingClick = this.newListingClick.bind(this);
         this.editProfileClick = this.editProfileClick.bind(this);
@@ -85,8 +87,16 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         });
         if(APIRequestHandler.instance.getLoggedIn() === this.state.username) {
             APIRequestHandler.instance.getUserWishlist(this.state.username).then((res) => {
+                const listings: ListingProps[] = [];
+                for(const wish of res) {
+                    APIRequestHandler.instance.getListing(wish.username, wish.title).then((res) => {
+                        listings.push(res);
+                        prof.forceUpdate();
+                    });
+                }
                 prof.setState({
-                    userWishlist: res
+                    userWishlist: res,
+                    userWishlistListings: listings
                 });
             });
         }
@@ -160,7 +170,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     displayWishlist() {
         const out = [];
         let key = 0;
-        for(let listing of this.state.userWishlist) {
+        for(let listing of this.state.userWishlistListings) {
             out.push(
                 <ListingPreview key={key++} {...listing} />
             );

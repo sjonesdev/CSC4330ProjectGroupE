@@ -28,6 +28,12 @@ interface SearchProps {
     username?: string
 }
 
+interface WishlistProps {
+    username: string
+    title: string
+    price: number
+}
+
 const setCookie = (cname: string, cvalue: string, exdays: number) => {
     const d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -40,13 +46,13 @@ const getCookie = (cname: string): string => {
     let name = cname + "=";
     let cookie = document.cookie;
     let ca = cookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
+    for(let i = 0; i < ca.length; i++) {
         let c = ca[i];
         while (c.charAt(0) === ' ') {
-        c = c.substring(1);
+            c = c.substring(1);
         }
         if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length);
+            return c.substring(name.length, c.length);
         }
     }
     return "";
@@ -116,7 +122,18 @@ class DummyAPIRequestHandler {
         wishlists: [
             {
                 username: 'email@columbus.com',
-                listingIDs: ['ab', 'abc']
+                info: [
+                    {
+                        username: "email@columbus.edu",
+                        title: "example5",
+                        price: 27089.283094739
+                    }, 
+                    {
+                        username: "email@columbus.edu",
+                        title: "example4",
+                        price: 5
+                    }
+                ]
             }
         ]
     };
@@ -140,10 +157,11 @@ class DummyAPIRequestHandler {
         return found ? i : -1;
     }
 
-    private findListing(listingID: string): number {
+    private findListing(listingUsername: string, listingTitle: string): number {
         let i, found = false;
         for(i = 0; i < DummyAPIRequestHandler.database.listings.length; i++) {
-            if(DummyAPIRequestHandler.database.listings[i].listingID === listingID) {
+            if(DummyAPIRequestHandler.database.listings[i].username === listingUsername 
+                    && DummyAPIRequestHandler.database.listings[i].title === listingTitle) {
                 found = true;
                 break;
             }
@@ -151,22 +169,22 @@ class DummyAPIRequestHandler {
         return found ? i : -1;
     }
 
-    private findWishlist(username: string): string[] {
-        let wishlist: string[] = [];
+    private findWishlist(username: string): WishlistProps[] {
+        let wishlist: WishlistProps[] = [];
         for(let i = 0; i < DummyAPIRequestHandler.database.wishlists.length; i++) {
             if(DummyAPIRequestHandler.database.listings[i].username === username) {
-                wishlist = DummyAPIRequestHandler.database.wishlists[i].listingIDs;
+                wishlist = DummyAPIRequestHandler.database.wishlists[i].info;
                 break;
             }
         }
         return wishlist;
     }
 
-    private findListingInWishlist(username: string, listingID: string): number {
+    private findListingInWishlist(username: string, listingUsername: string, listingTitle: string): number {
         let found = false, i, wishlist = this.findWishlist(username);
         if(wishlist === null) return -2;
         for(i = 0; i < wishlist.length; i++) {
-            if(wishlist[i] === listingID) {
+            if(wishlist[i].username === listingUsername && wishlist[i].title === listingTitle) {
                 found = true;
                 break;
             }
@@ -293,16 +311,17 @@ class DummyAPIRequestHandler {
         });
     }
 
-    getUserWishlist(username: string): Promise<ListingProps[]> {
+    getUserWishlist(username: string): Promise<WishlistProps[]> {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                const ids = this.findWishlist(username);
-                const listings = [];
-                for(let id of ids) {
-                    const idx = this.findListing(id);
-                    if(idx >= 0) listings.push(DummyAPIRequestHandler.database.listings[idx]);
-                }
-                resolve(listings);
+                const wishlist = this.findWishlist(username);
+                // const listings = [];
+                // for(let wishlistItem of wishlist) {
+                //     const idx = this.findListing(wishL);
+                //     if(idx >= 0) listings.push(DummyAPIRequestHandler.database.listings[idx]);
+                // }
+                // resolve(listings);
+                resolve(wishlist);
             })
         })
     }
@@ -338,10 +357,16 @@ class DummyAPIRequestHandler {
         })
     }
 
-    addWishlistListing(username: string, listingID: string): Promise<boolean> {
+    addWishlistListing(username: string, listingUsername: string, listingTitle: string): Promise<boolean> {
         let list = this.findWishlist(username);
-        if(this.findListing(listingID) >= 0) {
-            list.push(listingID);
+        let listingIdx = this.findListing(listingUsername, listingTitle);
+        if(listingIdx >= 0) {
+            const listing = DummyAPIRequestHandler.database.listings[listingIdx];
+            list.push({
+                username: listing.username,
+                title: listing.title,
+                price: listing.price
+            });
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
                     resolve(true);
@@ -395,11 +420,12 @@ class DummyAPIRequestHandler {
         }
     }
 
-    updateListing(listingID: string, newListing: ListingProps): Promise<boolean> {
-        let l = this.findListing(listingID);
+    updateListing(username: string, title: string, newListing: ListingProps): Promise<boolean> {
+        let l = this.findListing(username, title);
         if(l >= 0) {
-            if(DummyAPIRequestHandler.database.listings[l].listingID === newListing.listingID) {
-                DummyAPIRequestHandler.database.listings[l] = {...newListing};
+            const listing = DummyAPIRequestHandler.database.listings[l];
+            if(listing.username === newListing.username) {
+                DummyAPIRequestHandler.database.listings[l] = {...newListing, listingID: listing.listingID};
                 return new Promise((resolve, reject) => {
                     setTimeout(() => {
                         resolve(true);
@@ -414,8 +440,8 @@ class DummyAPIRequestHandler {
         });
     }
 
-    removeWishlistListing(username: string, listingID: string): Promise<boolean> {
-        let i = this.findListingInWishlist(username, listingID);
+    removeWishlistListing(username: string, listingUsername: string, listingTitle: string): Promise<boolean> {
+        let i = this.findListingInWishlist(username, listingUsername, listingTitle);
         if(i >= 0) {
             this.findWishlist(username).splice(i, 1);
             return new Promise((resolve, reject) => {
@@ -451,8 +477,8 @@ class DummyAPIRequestHandler {
         });
     }
 
-    deleteListing(listingID: string): Promise<boolean> {
-        let l = this.findListing(listingID);
+    deleteListing(username: string, title: string): Promise<boolean> {
+        let l = this.findListing(username, title);
         if(l < 0) {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
@@ -555,7 +581,7 @@ export default class APIRequestHandler {
         );
     }
 
-    getUserWishlist(username: string): Promise<ListingProps[]> {
+    getUserWishlist(username: string): Promise<WishlistProps[]> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         return axiosInstance.get('/wishlist/' + encodeURIComponent(username),
             {
@@ -574,7 +600,7 @@ export default class APIRequestHandler {
         let loggedIn = this.getLoggedIn();
         if(loggedIn.length !== 0) throw new Error(`Already logged in with username ${loggedIn}.`);
         let err = false;
-        let token = await axios.post('/login', {
+        let token = await axios.post('/login/', {
             params: {
                 username,
                 password
@@ -599,7 +625,7 @@ export default class APIRequestHandler {
         if(!username) username = this.getLoggedIn();
         if(username === this.getLoggedIn()) {
             let err = false;
-            await axios.post('/logout', {
+            await axios.post('/logout/', {
                 params: {username}
             }).then((response) => {
                 console.log(response);
@@ -618,7 +644,7 @@ export default class APIRequestHandler {
     }
 
     createProfile(profile: UserProfileProps, password: string): Promise<boolean> {
-        return axiosInstance.post('/users', {
+        return axiosInstance.post('/users/', {
             username: profile.email, 
             password
         });
@@ -632,24 +658,29 @@ export default class APIRequestHandler {
         });
     }
 
-    async addWishlistListing(username: string, listingID: string): Promise<boolean> {
+    async addWishlistListing(username: string, listingUsername: string, listingTitle: string): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        const response = await axios.get('/wishlist/' + username);
+        const response = await axios.get('/wishlist/' + encodeURIComponent(username));
+        const listing = await axios.get('/listing/' + encodeURIComponent(listingUsername) + '/' + encodeURIComponent(listingTitle));
         let curListings = response.data.listings;
-        curListings.push(listingID);
+        curListings.push({
+            username: listingUsername,
+            title: listingTitle,
+            price: listing.data['price']
+        });
         return axios.put('/wishlist/' + encodeURIComponent(username), { 
             listings: curListings,
             token: getCookie('token')
          });
     }      
 
-    async removeWishlistListing(username: string, listingID: string): Promise<boolean> {
+    async removeWishlistListing(username: string, listingUsername: string, listingTitle: string): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         const response = await axios.get('/wishlist/' + username);
         let curListings = response.data.listings;
         for (let i in curListings) {
             let listing = curListings[i];
-            if (listing === listingID) {
+            if (listing.username === listingUsername && listing.title === listingTitle) {
                 curListings.splice(i, 1);
             }
         }
@@ -661,9 +692,9 @@ export default class APIRequestHandler {
 
 
     // PUT Requests
-    updateListing(listingID: string, newListing: ListingProps): Promise<boolean> {
+    updateListing(username: string, title: string, newListing: ListingProps): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axios.put('/profile/' + encodeURIComponent(listingID), {
+        return axios.put('/profile/' + encodeURIComponent(username) + '/' + encodeURIComponent(title), {
             ...newListing,
             token: getCookie('token')
         });
@@ -691,9 +722,9 @@ export default class APIRequestHandler {
         );
     }
 
-    deleteListing(listingID: string): Promise<boolean> {
+    deleteListing(username: string, title: string): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axios.delete('/listing/' + encodeURIComponent(listingID),
+        return axios.delete('/listing/' + encodeURIComponent(username) + '/' + encodeURIComponent(title),
             {
                 params: {
                     token: getCookie("token")
@@ -704,4 +735,4 @@ export default class APIRequestHandler {
 
 }
 
-export type { UserProfileProps, ListingProps, SearchProps };
+export type { UserProfileProps, ListingProps, SearchProps, WishlistProps };

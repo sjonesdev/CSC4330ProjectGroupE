@@ -20,6 +20,7 @@ interface ListingState {
     newPrice: number
     newTags: string[]
     newNumTags: number
+    deleted: boolean
 }
  
 class Listing extends React.Component<ListingPlusProps, ListingState> {
@@ -49,8 +50,10 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
             newPrice: 0,
             newTags: [],
             newNumTags: 0,
+            deleted: false,
         };
         this.handleEditListing = this.handleEditListing.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     componentDidMount() {
@@ -155,14 +158,25 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
         }
     }
 
+    handleDelete() {
+        APIRequestHandler.instance.deleteListing(this.state.username, this.state.listing.title);
+        this.setState({ deleted: true });
+    }
+
     getExtras() {
         if(APIRequestHandler.instance.getLoggedIn() === this.state.username) {
-            return this.getEditListingForm();
+            return (
+                <>
+                    {this.getEditListingForm()}
+                    <button onClick={this.handleDelete}>Delete</button>
+                </>
+            );
         }
     }
 
     render() { 
         if(!this.state.username || !this.state.title) return (<Navigate to="/notfound" />);
+        if(this.state.deleted) return (<Navigate to="/" />)
         return ( 
             <div className="content-container">
                 <div className="listing">
