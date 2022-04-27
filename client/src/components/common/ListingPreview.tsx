@@ -31,7 +31,7 @@ class ListingPreview extends React.Component<ListingProps, any> {
                 </div>
                 {/* <h4 className="preview-post-date"></h4> */}
                 <div className="listing-info">
-                    <span className="preview-span preview-desc">{this.props.desc}</span>
+                    <span className="preview-span preview-desc">{this.props.description}</span>
                     <span className='preview-span price'>${parseFloat("" + this.props.price).toFixed(2)}</span>
                 </div>
             </div>

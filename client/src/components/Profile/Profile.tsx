@@ -12,7 +12,7 @@ interface ProfileState {
     username: string
     name: string
     contact: string
-    desc: string
+    description: string
     signedIn: boolean
     showEditForm: boolean
     showNewListingForm: boolean
@@ -43,7 +43,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             ...props,
             name: "",
             contact: "",
-            desc: "",
+            description: "",
             showEditForm: false,
             showNewListingForm: false,
             newName: "",
@@ -129,7 +129,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         const req: ListingProps = {
             listingID: "",
             title: this.state.listTitle,
-            desc: this.state.listDesc,
+            description: this.state.listDesc,
             username: this.state.username,
             price: parseFloat(this.state.listPrice),
             contact: this.state.contact,

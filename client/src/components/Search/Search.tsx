@@ -11,8 +11,8 @@ interface SearchProps {
 interface SearchState {
     defaultSearch: string
     defaultCategory: string
-    minPrice: number
-    maxPrice: number
+    priceLower: number
+    priceUpper: number
     maxAgeHours: number
     listings: ListingProps[]
     selectedCategory: number
@@ -36,8 +36,8 @@ class Search extends React.Component<SearchProps, SearchState> {
         this.state = {
             defaultSearch: props.defaultSearch,
             defaultCategory: props.defaultCategory ? props.defaultCategory : "All",
-            minPrice: -Infinity,
-            maxPrice: Infinity,
+            priceLower: -Infinity,
+            priceUpper: Infinity,
             maxAgeHours: Infinity,
             listings: [],
             selectedCategory: typeof props.defaultCategory === "string" ? Search.categories.findIndex((val) => val === props.defaultCategory) : 0
@@ -60,8 +60,8 @@ class Search extends React.Component<SearchProps, SearchState> {
             if(Search.categories[this.state.selectedCategory] !== "All")
                 req.tag = Search.categories[this.state.selectedCategory];
         }
-        if(this.state.minPrice !== -Infinity) req.minPrice = this.state.minPrice;
-        if(this.state.maxPrice !== Infinity) req.maxPrice = this.state.maxPrice;
+        if(this.state.priceLower !== -Infinity) req.minPrice = this.state.priceLower;
+        if(this.state.priceUpper !== Infinity) req.maxPrice = this.state.priceUpper;
         // if(this.state.maxAgeHours !== Infinity) req.maxAgeHours = this.state.maxAgeHours;
         const prof = this;
         APIRequestHandler.instance.getListings(req).then( (res) => {
@@ -159,9 +159,9 @@ class Search extends React.Component<SearchProps, SearchState> {
                                 <legend>Price Range</legend>
                                 <div className="input-wrapper">
                                     <label htmlFor="min-price">$</label>
-                                    <input type="text" name="min-price" onChange={(e) => this.setState({ minPrice: parseFloat(e.target.value) })} />
+                                    <input type="text" name="min-price" onChange={(e) => this.setState({ priceLower: parseFloat(e.target.value) })} />
                                     <label htmlFor="max-price"> to $</label>
-                                    <input type="text" name="max-price" onChange={(e) => this.setState({ maxPrice: parseFloat(e.target.value) })} />
+                                    <input type="text" name="max-price" onChange={(e) => this.setState({ priceUpper: parseFloat(e.target.value) })} />
                                 </div>
                             </fieldset>
                             <fieldset>

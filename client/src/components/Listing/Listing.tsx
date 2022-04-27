@@ -33,7 +33,7 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
             listing: {
                 listingID: "",
                 title: "",
-                desc: "",
+                description: "",
                 username: "",
                 price: Infinity,
                 contact: "",
@@ -101,7 +101,7 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
         const req: ListingProps = {
             listingID: "",
             title: this.state.newTitle.length === 0 ? this.state.title : this.state.newTitle,
-            desc: this.state.newDesc.length === 0 ? this.state.listing.desc : this.state.newDesc,
+            description: this.state.newDesc.length === 0 ? this.state.listing.description : this.state.newDesc,
             contact: this.state.newContact.length === 0 ? this.state.listing.contact : this.state.newContact,
             username: this.state.username,
             price: this.state.newPrice === Infinity ? this.state.listing.price : this.state.newPrice,
@@ -212,7 +212,7 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
                         <p className="listing-desc-text">
                             ${parseFloat("" + this.state.listing.price).toFixed(2)}
                             <br/>
-                            {this.state.listing.desc}
+                            {this.state.listing.description}
                         </p>
                     </div>
                     {this.getExtras()}

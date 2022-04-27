@@ -12,7 +12,7 @@ interface UserProfileProps {
 interface ListingProps {
     listingID: string,
     title: string,
-    desc: string,
+    description: string,
     username: string,
     price: number,
     contact: string
@@ -20,12 +20,13 @@ interface ListingProps {
 }
 
 interface SearchProps {
-    keywords?: string,
-    minPrice?: number,
-    maxPrice?: number,
-    tag?: string,
-    maxAgeHours?: number,
     username?: string
+    keywords?: string,
+    priceLower?: number,
+    priceUpper?: number,
+    description?: string,
+    tag?: string,
+    //maxAgeHours?: number,
 }
 
 interface WishlistProps {
@@ -76,7 +77,7 @@ class DummyAPIRequestHandler {
             {
                 listingID: 'abc123',
                 title: 'example',
-                desc: 'this is a listing',
+                description: 'this is a listing',
                 username: 'email@columbus.edu',
                 price: 999,
                 contact: 'N/A',
@@ -85,7 +86,7 @@ class DummyAPIRequestHandler {
             {
                 listingID: 'abc12',
                 title: 'example2',
-                desc: 'this is a listing2',
+                description: 'this is a listing2',
                 username: 'email@columbus.edu',
                 price: 100,
                 contact: 'N/A',
@@ -94,7 +95,7 @@ class DummyAPIRequestHandler {
             {
                 listingID: 'abc1',
                 title: 'example3',
-                desc: 'this is a listing3',
+                description: 'this is a listing3',
                 username: 'email@columbus.edu',
                 price: 2,
                 contact: 'no thanks',
@@ -103,7 +104,7 @@ class DummyAPIRequestHandler {
             {
                 listingID: 'abc',
                 title: 'example4',
-                desc: 'this is a listing4',
+                description: 'this is a listing4',
                 username: 'email@columbus.edu',
                 price: 4.50,
                 contact: 'email',
@@ -112,7 +113,7 @@ class DummyAPIRequestHandler {
             {
                 listingID: 'ab',
                 title: 'example5',
-                desc: 'this is a listing5',
+                description: 'this is a listing5',
                 username: 'email@columbus.edu',
                 price: 27089.283094739,
                 contact: '9997774444',
@@ -289,8 +290,8 @@ class DummyAPIRequestHandler {
                     let add = true;
                     if(searchParams.tag && !list.tags.includes(searchParams.tag) && searchParams.tag !== "All") add = false;
                     if(searchParams.keywords && !list.title.includes(searchParams.keywords)) add = false;
-                    if(searchParams.minPrice && list.price < searchParams.minPrice) add = false;
-                    if(searchParams.maxPrice && list.price > searchParams.maxPrice) add = false;
+                    if(searchParams.priceLower && list.price < searchParams.priceLower) add = false;
+                    if(searchParams.priceUpper && list.price > searchParams.priceUpper) add = false;
                     if(add) out.push(list);
                 }
                 resolve(out);
@@ -520,8 +521,11 @@ export default class APIRequestHandler {
 
     getProfile(username: string): Promise<UserProfileProps> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.get('/profile/' + encodeURIComponent(username),
+        return axiosInstance.get('/users/',
             {
+                params: {
+                    username: encodeURIComponent(username)
+                },
                 data: {
                     token: getCookie("token")
                 }
@@ -531,8 +535,11 @@ export default class APIRequestHandler {
 
     getUserListings(username: string): Promise<ListingProps[]> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.get('/listing/' + encodeURIComponent(username),
+        return axiosInstance.get('/listings/',
             {
+                params: {
+                    username: encodeURIComponent(username)
+                },
                 data: {
                     token: getCookie("token")
                 }
@@ -553,8 +560,12 @@ export default class APIRequestHandler {
 
     getListing(username: string, title: string): Promise<ListingProps> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.get('/listing/' + encodeURIComponent(username) + "/" + encodeURIComponent(title),
+        return axiosInstance.get('/listing/',
             {
+                params: {
+                    username: encodeURIComponent(username),
+                    title: encodeURIComponent(title)
+                },
                 data: {
                     token: getCookie("token")
                 }
@@ -564,16 +575,23 @@ export default class APIRequestHandler {
 
     async getListings(searchParams: SearchProps): Promise<ListingProps[]> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        let searchStr = ""
+        // let searchStr = ""
         let key: keyof typeof searchParams;
+        // for(key in searchParams) {
+        //     if(searchParams[key] !== undefined) {
+        //         searchStr += `?${encodeURIComponent(key)}=${encodeURIComponent("" + searchParams[key])}`
+        //     }
+        // }
+        const params: {[key: string]: any} = {};
         for(key in searchParams) {
             if(searchParams[key] !== undefined) {
-                searchStr += `?${encodeURIComponent(key)}=${encodeURIComponent("" + searchParams[key])}`
+                params[key] = encodeURIComponent("" + searchParams[key])
             }
         }
         return await axiosInstance.get(
-            '/listings/' + searchStr,
+            '/listings/',// + searchStr,
             {
+                params,
                 data: {
                     token: getCookie("token")
                 }
@@ -658,7 +676,7 @@ export default class APIRequestHandler {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
         return axiosInstance.post('/listing', {
             ...listing,
-            description: listing.desc,
+            description: listing.description,
             token: getCookie('token')
         });
     }
