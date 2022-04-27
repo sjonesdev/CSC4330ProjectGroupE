@@ -87,12 +87,25 @@ class WishlistListings(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # TODO
+    def put(self, request):
+        title = request.query_params.get('title')
+        username = request.query_params.get('username')
+        if title and username:
+            listing = WishlistListing.objects.get(listingTitle=title, username=username)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if listing is None:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = WishlistListingSerializer(listing, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def delete(self, request):
-        listingID = request.query_params.get('listingID')
-        userID = request.query_params.get('userID')
-        if listingID and userID:
-            listing = WishlistListing.objects.get(listing=listingID, user=userID)
+        title = request.query_params.get('title')
+        username = request.query_params.get('username')
+        if title and username:
+            listing = WishlistListing.objects.get(listingTitle=title, username=username)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         listing.delete()
