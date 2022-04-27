@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
-const axiosInstance = axios.create({baseURL: 'https://localhost:8000'});
+const axiosInstance = axios.create({
+    baseURL: 'http://localhost:8000'
+});
 
 interface UserProfileProps {
     email: string,
@@ -471,7 +473,7 @@ class DummyAPIRequestHandler {
     }
 }
 
-let useDummyAPI = true;
+let useDummyAPI = false;
 export default class APIRequestHandler {
 
     static instance: APIRequestHandler = new APIRequestHandler();
@@ -616,7 +618,10 @@ export default class APIRequestHandler {
     }
 
     createProfile(profile: UserProfileProps, password: string): Promise<boolean> {
-        return axiosInstance.post('/profile', {...profile, password});
+        return axiosInstance.post('/users', {
+            username: profile.email, 
+            password
+        });
     }
     
     createListing(listing: ListingProps): Promise<boolean> {
