@@ -132,10 +132,11 @@ class UserList(APIView):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
     def post(self, request):
-        username = request.query_params.get('username')
-        if username:
+        data = request.data
+        if data["username"]:
+            username = data["username"]
             if len(username)<=13 or username[-13:]!="@columbus.edu" :
-                    return Response(status=status.HTTP_400_BAD_REQUEST)                                                      
+                    return Response(status=status.HTTP_400_BAD_REQUEST)                                                    
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
