@@ -78,7 +78,7 @@ class WishlistListings(APIView):
         serializer = WishlistListingSerializer(listings, many=True)
         return Response(serializer.data)
     def post(self, request):
-        serializer = WishlistListing(data=request.data)
+        serializer = WishlistListingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
