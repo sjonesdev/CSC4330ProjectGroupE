@@ -1,13 +1,10 @@
 from django.shortcuts import render
-
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import User, Listing, WishlistListing, Tag
 from .serializers import UserSerializer, ListingSerializer, WishlistListingSerializer, TagSerializer
-from server import serializers
 
 class AllListings(APIView):
     def get(self, request):
@@ -37,7 +34,7 @@ class AllListings(APIView):
         if priceLower:
             listings = listings.filter(price__gte=priceLower)
         if username:
-            listings = listings.filter(user__username__iexact=username)
+            listings = listings.filter(username__iexact=username)
         serializer = ListingSerializer(listings, many=True)
         return Response(serializer.data)
     def post(self, request):
@@ -48,9 +45,9 @@ class AllListings(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def put(self, request):
         title = request.query_params.get('title')
-        userID = request.query_params.get('userID')
-        if title and userID:
-            listing = Listing.objects.get(title=title, user=userID)
+        username = request.query_params.get('username')
+        if title and username:
+            listing = Listing.objects.get(title=title, username=username)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         if listing is None:
@@ -62,9 +59,9 @@ class AllListings(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def delete(self, request):
         title = request.query_params.get('title')
-        userID = request.query_params.get('userID')
-        if title and userID:
-            listing = Listing.objects.get(title=title, user=userID)
+        username = request.query_params.get('username')
+        if title and username:
+            listing = Listing.objects.get(title=title, username=username)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         listing.delete()

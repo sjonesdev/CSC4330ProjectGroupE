@@ -22,7 +22,8 @@ class Listing(models.Model):
     description=models.CharField(max_length=255, blank=False)
     price=models.DecimalField(max_digits=10, decimal_places=2)
     contact=models.CharField(max_length=255)
-    user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    #user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    username=models.CharField(max_length=255, default="...")
     tags=models.ManyToManyField(Tag)
 
     def __str__(self):

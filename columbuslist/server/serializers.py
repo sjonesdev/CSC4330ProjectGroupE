@@ -26,7 +26,7 @@ class ListingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=Listing
-        fields=("title", "description", "price", "contact", "user", "tags")
+        fields=("title", "description", "price", "contact", "username", "tags")
 
     #    def update(self, instance, validated_data):
     #        print(validated_data)
