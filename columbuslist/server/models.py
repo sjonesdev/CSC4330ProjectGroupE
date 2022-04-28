@@ -32,9 +32,9 @@ class Listing(models.Model):
 class WishlistListing(models.Model):
     #listing=models.ForeignKey(Listing, on_delete=models.CASCADE, null=True)
     #user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    listingTitle = models.CharField(max_length=255, default="blank")
+    title = models.CharField(max_length=255, default="blank")
     username = models.CharField(max_length=255, default="blank")
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
-        return f"{self.listingTitle} {self.username} {self.price}"
+        return f"{self.title} {self.username} {self.price}"

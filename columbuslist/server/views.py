@@ -70,7 +70,7 @@ class AllListings(APIView):
 class WishlistListings(APIView):
     def get(self, request):
         username = request.query_params.get('username')
-        listings = Listing.objects.all()
+        listings = WishlistListing.objects.all()
         if username:
             listings = listings.filter(username=username)
         else:
@@ -88,7 +88,7 @@ class WishlistListings(APIView):
         title = request.query_params.get('title')
         username = request.query_params.get('username')
         if title and username:
-            listing = WishlistListing.objects.get(listingTitle=title, username=username)
+            listing = WishlistListing.objects.get(title=title, username=username)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         if listing is None:
@@ -102,7 +102,7 @@ class WishlistListings(APIView):
         title = request.query_params.get('title')
         username = request.query_params.get('username')
         if title and username:
-            listing = WishlistListing.objects.get(listingTitle=title, username=username)
+            listing = WishlistListing.objects.get(title=title, username=username)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         listing.delete()
