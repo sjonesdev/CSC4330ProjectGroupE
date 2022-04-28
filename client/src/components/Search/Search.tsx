@@ -11,8 +11,8 @@ interface SearchProps {
 interface SearchState {
     defaultSearch: string
     defaultCategory: string
-    priceLower: number
-    priceUpper: number
+    priceL: number
+    priceH: number
     maxAgeHours: number
     listings: ListingProps[]
     selectedCategory: number
@@ -23,12 +23,16 @@ class Search extends React.Component<SearchProps, SearchState> {
     static categories = [
         "All", 
         "Electronics", 
-        "Collectibles & Art", 
-        "Home & Garden", 
-        "Clothing & Accessories", 
-        "Sporting Goods",
-        "Business & Industrial",
-        "Jewelry & Watches"
+        "Collectibles", 
+        "Art",
+        "Home", 
+        "Garden",
+        "Clothing",
+        "Accessories", 
+        "Sports",
+        "Business",
+        "Industrial",
+        "Jewelry"
     ]
 
     constructor(props: SearchProps) {
@@ -36,8 +40,8 @@ class Search extends React.Component<SearchProps, SearchState> {
         this.state = {
             defaultSearch: props.defaultSearch,
             defaultCategory: props.defaultCategory ? props.defaultCategory : "All",
-            priceLower: -Infinity,
-            priceUpper: Infinity,
+            priceL: -Infinity,
+            priceH: Infinity,
             maxAgeHours: Infinity,
             listings: [],
             selectedCategory: typeof props.defaultCategory === "string" ? Search.categories.findIndex((val) => val === props.defaultCategory) : 0
@@ -60,8 +64,8 @@ class Search extends React.Component<SearchProps, SearchState> {
             if(Search.categories[this.state.selectedCategory] !== "All")
                 req.tag = Search.categories[this.state.selectedCategory];
         }
-        if(this.state.priceLower !== -Infinity) req.minPrice = this.state.priceLower;
-        if(this.state.priceUpper !== Infinity) req.maxPrice = this.state.priceUpper;
+        if(this.state.priceL !== -Infinity) req.priceL = this.state.priceL;
+        if(this.state.priceH !== Infinity) req.priceH = this.state.priceH;
         // if(this.state.maxAgeHours !== Infinity) req.maxAgeHours = this.state.maxAgeHours;
         const prof = this;
         APIRequestHandler.instance.getListings(req).then( (res) => {
@@ -159,9 +163,9 @@ class Search extends React.Component<SearchProps, SearchState> {
                                 <legend>Price Range</legend>
                                 <div className="input-wrapper">
                                     <label htmlFor="min-price">$</label>
-                                    <input type="text" name="min-price" onChange={(e) => this.setState({ priceLower: parseFloat(e.target.value) })} />
+                                    <input type="text" name="min-price" onChange={(e) => this.setState({ priceL: e.target.value.length === 0 ? -Infinity : parseFloat(e.target.value) })} />
                                     <label htmlFor="max-price"> to $</label>
-                                    <input type="text" name="max-price" onChange={(e) => this.setState({ priceUpper: parseFloat(e.target.value) })} />
+                                    <input type="text" name="max-price" onChange={(e) => this.setState({ priceH: e.target.value.length === 0 ? Infinity : parseFloat(e.target.value) })} />
                                 </div>
                             </fieldset>
                             <fieldset>

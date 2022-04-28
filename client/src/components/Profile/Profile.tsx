@@ -90,6 +90,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         if(APIRequestHandler.instance.getLoggedIn() === this.state.username) {
             APIRequestHandler.instance.getUserWishlist(this.state.username).then((res) => {
                 const listings: ListingProps[] = [];
+                console.log(res);
                 for(const wish of res) {
                     APIRequestHandler.instance.getListing(wish.username, wish.title).then((res) => {
                         listings.push(res);
@@ -161,7 +162,6 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         const out = [];//await APIRequestHandler.instance.getUserWishlist(this.state.username);
         let key = 0;
         for(let listing of this.state.userListings) {
-            console.log("listing", listing)
             out.push(
                 <ListingPreview key={key++} listing={listing} />
             );
@@ -174,7 +174,6 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         const out = [];
         let key = 0;
         for(let listing of this.state.userWishlistListings) {
-            console.log("wishlisting", listing)
             out.push(
                 <ListingPreview 
                 key={key} 

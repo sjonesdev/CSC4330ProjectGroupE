@@ -36,6 +36,7 @@ class SignIn extends React.Component<SignInProps, SignInState> {
         event.preventDefault();
         try {
             let token = await APIRequestHandler.instance.login(this.state.username, this.state.password);
+            console.log(token);
             this.setState({ signedIn: true });
             this.state.setSignedIn(true);
         } catch (error) {

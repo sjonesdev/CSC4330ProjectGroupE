@@ -59,14 +59,8 @@ const getCookie = (cname: string): string => {
     return "";
 }
 
-const databaseTagStructure = (tags: string[]): {name: string}[] => {
-    const out = [];
-    for(let i = 0; i < tags.length; i++) {
-        out[i] = {
-            name: tags[i]
-        }
-    }
-    return out;
+const databaseTagStructure = (tags: string[]): string => {
+    return tags.join(" ");
 }
 
 class DummyAPIRequestHandler {
@@ -532,6 +526,10 @@ class DummyAPIRequestHandler {
             }, DummyAPIRequestHandler.testTimeout);
         });
     }
+
+    deleteWishlistListing(username: string, listingUsername: string, listingTitle: string): Promise<any> {
+        return new Promise(() => null);
+    }
 }
 
 let useDummyAPI = false;
@@ -600,7 +598,8 @@ export default class APIRequestHandler {
                 }
             }
         ).then((res) => {
-            return res.data;
+            console.log(username, title, res)
+            return {...res.data[0], tags: res.data[0].tags.split(" ")};
         });
     }
 
@@ -627,12 +626,8 @@ export default class APIRequestHandler {
                 params
             }
         ).then((res) => {
-            console.log(res);
             for(let i = 0; i < res.data.length; i++) {
-                const listing = res.data[i];
-                for(let j = 0; j < listing.tags.length; j++) {
-                    listing.tags[j] = listing.tags[j].name;
-                }
+                res.data[i].tags = res.data[i].tags.split(" ");
             }
             return res.data;
         });
@@ -676,31 +671,37 @@ export default class APIRequestHandler {
             return true;
         } 
         console.log(token);
+        throw new Error("Bad login request");
         return false;
     }
 
-    async logout(username?: string): Promise<boolean> {
-        if(!username) username = this.getLoggedIn();
-        if(username === this.getLoggedIn()) {
-            let err = false;
-            await axiosInstance.post('/logout/', {
-                username: username, 
-                token: getCookie('token')
-            }).then((response) => {
-                console.log(response);
-                APIRequestHandler.loggedIn = false;
-                setCookie("username", "", -1);
-                setCookie("token", "", -1);
-                return response;
-            }).catch((error) => {
-                console.log(error);
-                err = true;
-                return error;
-            });
-            return !err;
-        }
-        return false
+    logout(username?: string): Promise<boolean> {
+        setCookie("username", "", -1);
+        setCookie("token", "", -1);
+        return axiosInstance.get('/logout/');
     }
+    // async logout(username?: string): Promise<boolean> {
+    //     if(!username) username = this.getLoggedIn();
+    //     if(username === this.getLoggedIn()) {
+    //         let err = false;
+    //         await axiosInstance.post('/logout/', {
+    //             username: username, 
+    //             token: getCookie('token')
+    //         }).then((response) => {
+    //             console.log(response);
+    //             APIRequestHandler.loggedIn = false;
+    //             setCookie("username", "", -1);
+    //             setCookie("token", "", -1);
+    //             return response;
+    //         }).catch((error) => {
+    //             console.log(error);
+    //             err = true;
+    //             return error;
+    //         });
+    //         return !err;
+    //     }
+    //     return false
+    // }
 
     async createProfile(profile: UserProfileProps, password: string): Promise<boolean> {
         return await axiosInstance.post('/users/', {
@@ -725,31 +726,35 @@ export default class APIRequestHandler {
 
     async addWishlistListing(username: string, listingUsername: string, listingTitle: string): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        const response = await axiosInstance.get('/wishlist/', {
-            data: {
-                token: getCookie('token')
-            },
-            params: {
-                username: username
-            }
-        });
-        const listing = await axiosInstance.get('/listings/', {
-            data: {
-                token: getCookie('token')
-            },
-            params: {
-                username: listingUsername,
-                title: listingTitle
-            }
-        });
-        let curListings = response.data.listings;
-        curListings.push({
-            username: listingUsername,
-            title: listingTitle,
-            price: listing.data['price']
-        });
-        return axiosInstance.put('/wishlist/' + '/?username=' + username, { 
-            listings: curListings,
+        // const response = await axiosInstance.get('/wishlist/', {
+        //     data: {
+        //         token: getCookie('token')
+        //     },
+        //     params: {
+        //         username: username
+        //     }
+        // });
+        const listing = await this.getListing(listingUsername, listingTitle);
+        // await axiosInstance.get('/listings/', {
+        //     data: {
+        //         token: getCookie('token')
+        //     },
+        //     params: {
+        //         username: listingUsername,
+        //         title: listingTitle
+        //     }
+        // });
+        // console.log(response);
+        // let curListings = response.data;
+        // curListings.push({
+        //     username: listingUsername,
+        //     title: listingTitle,
+        //     price: listing.data['price']
+        // });
+        return axiosInstance.post('/wishlist/?username=' + username, { 
+            username: listing.username,
+            title: listing.title,
+            price: listing.price,
             token: getCookie('token')
         });
     }      
@@ -783,8 +788,9 @@ export default class APIRequestHandler {
     // PUT Requests
     async updateListing(username: string, title: string, newListing: ListingProps): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.put('/profile/', {
+        return axiosInstance.put('/listings/', {
             ...newListing,
+            tags: newListing.tags.join(" "),
             token: getCookie('token')
         },
         {
@@ -797,7 +803,7 @@ export default class APIRequestHandler {
 
     updateProfile(username: string, newProfile: UserProfileProps): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.put('/profile/', {
+        return axiosInstance.put('/users/', {
             ...newProfile,
             token: getCookie('token')
         },
@@ -813,7 +819,7 @@ export default class APIRequestHandler {
 
     deleteProfile(username: string): Promise<boolean> {
         if(!APIRequestHandler.loggedIn) new Promise(() => null);
-        return axiosInstance.delete('/profile/', {
+        return axiosInstance.delete('/users/', {
             data: {
                 token: getCookie("token")
             },
@@ -834,6 +840,16 @@ export default class APIRequestHandler {
                 token: getCookie("token")
             }
         });
+    }
+
+    deleteWishlistListing(username: string, listingUsername: string, listingTitle: string): Promise<any> {
+        if(!APIRequestHandler.loggedIn) new Promise(() => null);
+        return axiosInstance.delete('/wishlist/', {
+            params: {
+                username,
+                title: encodeURIComponent(listingTitle)
+            }
+        }); //?username=' + listingUsername + '&?title=' + encodeURIComponent(listingTitle));
     }
 
 }

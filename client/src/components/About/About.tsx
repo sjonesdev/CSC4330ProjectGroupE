@@ -53,7 +53,7 @@ class About extends React.Component<AboutProps, AboutState> {
                                 </div>
                                 <div className="card card--alt">
                                     <div className="photo-container">
-                                        <img src="/img/MartinIvanchev.jpg" alt="Photo of Martin Ivanchev" className="photo" />
+                                        <img src="/img/MartinIvanchev.png" alt="Photo of Martin Ivanchev" className="photo" />
                                     </div>
                                     <h3 className="card-title">Martin Ivanchev</h3>
                                     <p>

@@ -6,7 +6,7 @@ import APIRequestHandler, { ListingProps } from './APIRequestHandler';
 interface ListingPreviewProps {
     listing: ListingProps
     comparePrice?: number
-    wishlistPreivew?: boolean
+    wishlistPreview?: boolean
     refresh?: Function
 }
 
@@ -15,8 +15,6 @@ class ListingPreview extends React.Component<ListingPreviewProps, any> {
     constructor(props: ListingPreviewProps) {
         super(props);
         this.state = { };
-
-        console.log(this.props.listing);
 
         this.removeFromWishlist = this.removeFromWishlist.bind(this);
     }
@@ -35,7 +33,7 @@ class ListingPreview extends React.Component<ListingPreviewProps, any> {
 
     removeFromWishlist() {
         const prev = this;
-        APIRequestHandler.instance.removeWishlistListing(
+        APIRequestHandler.instance.deleteWishlistListing(
             APIRequestHandler.instance.getLoggedIn(),
             this.props.listing.username,
             this.props.listing.title
@@ -45,7 +43,8 @@ class ListingPreview extends React.Component<ListingPreviewProps, any> {
     }
 
     getNotification() {
-        if(this.props.comparePrice && this.props.listing.price < this.props.comparePrice) {
+        console.log(`is wish ${this.props.wishlistPreview}, comparePrice ${this.props.comparePrice}, listings price ${this.props.listing.price}`)
+        if(this.props.comparePrice && parseFloat("" + this.props.listing.price) < parseFloat("" + this.props.comparePrice)) {
             return (
                 <span className='preview-span preview-notification'>
                     <FontAwesomeIcon className='fa-2xl' icon={["fas", "circle-exclamation"]} />{" "}
@@ -63,7 +62,7 @@ class ListingPreview extends React.Component<ListingPreviewProps, any> {
                     <Link to={`/listing/${encodeURIComponent(this.props.listing.username)}/${this.props.listing.title}`} ><h4 className="preview-title">{this.props.listing.title}</h4></Link>
                     <span className='preview-span preview-tags'>{this.getTags()}</span>
                 </div>
-                <button className='button--alt' onClick={this.removeFromWishlist}>Remove</button>
+                {this.props.wishlistPreview ? <button className='button--alt' onClick={this.removeFromWishlist}>Remove</button> : <></>}
                 {/* <h4 className="preview-post-date"></h4> */}
                 <div className="listing-info">
                     <span className="preview-span preview-desc">{this.props.listing.description}</span>

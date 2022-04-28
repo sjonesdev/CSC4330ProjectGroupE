@@ -140,9 +140,9 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
                     <label htmlFor="newTitle">New Title</label>
                     <input type="text" name="newTitle"
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newTitle: event.target.value})} />
-                    <label htmlFor="newContact">New Contact</label>
+                    {/* <label htmlFor="newContact">New Contact</label>
                     <input type="text" name="newContact"
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newContact: event.target.value})} />
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newContact: event.target.value})} /> */}
                     <label htmlFor="newDesc">New Description</label>
                     <input type="text" name="newDesc"
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.setState({newDesc: event.target.value})} />
