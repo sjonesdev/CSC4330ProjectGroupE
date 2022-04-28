@@ -128,7 +128,10 @@ class UserList(APIView):
             "Access-Control-Allow-Origin": "http://localhost:3000/"
         })
     def get(self, request):
+        username=request.query_params.get("username")
         users = User.objects.all()
+        if username:
+            users=users.filter(username=username)
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
     def post(self, request):
