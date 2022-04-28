@@ -228,5 +228,5 @@ class Login(APIView):
     
 class Logout(APIView):
     def get(self, request):
-        return Response(status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
         
