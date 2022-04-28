@@ -24,5 +24,7 @@ urlpatterns = [
     path('users/', views.UserList.as_view()),
     path('tags/', views.Tags.as_view()),
     path('login/', views.Login.as_view()),
+    path('logout/', views.Logout.as_view()),
+    
 
 ]

@@ -225,3 +225,8 @@ class Login(APIView):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
     
+    
+class Logout(APIView):
+    def get(self, request):
+        return Response(status.HTTP_200_OK)
+        
