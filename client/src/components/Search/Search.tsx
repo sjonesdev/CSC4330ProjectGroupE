@@ -80,7 +80,7 @@ class Search extends React.Component<SearchProps, SearchState> {
         let key = 0;
         if(!this.state.listings) return;
         for(const listing of this.state.listings) {
-            out.push(<ListingPreview key={key++} {...listing} />);
+            out.push(<ListingPreview key={key++} listing={listing} />);
         }
         if(out.length === 0) return (<div>No Listings</div>);
         return out;

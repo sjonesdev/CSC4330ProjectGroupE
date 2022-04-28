@@ -160,7 +160,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         let key = 0;
         for(let listing of this.state.userListings) {
             out.push(
-                <ListingPreview key={key++} {...listing} />
+                <ListingPreview key={key++} listing={listing} />
             );
         }
         if(out.length === 0) out.push(<p key={0}>No Listings</p>);
@@ -171,9 +171,11 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         const out = [];
         let key = 0;
         for(let listing of this.state.userWishlistListings) {
+            console.log(listing.price, this.state.userWishlist[key].price);
             out.push(
-                <ListingPreview key={key++} {...listing} />
+                <ListingPreview key={key} listing={listing} comparePrice={this.state.userWishlist[key].price} />
             );
+            key++;
         }
         if(out.length === 0) out.push(<p key={0}>No Wishlist</p>);
         return out;
