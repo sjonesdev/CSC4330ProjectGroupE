@@ -74,14 +74,15 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
 
     getUpdatedProfileInfo() {
         let prof = this;
-        APIRequestHandler.instance.getProfile(APIRequestHandler.instance.getLoggedIn()).then((res) => {
+        APIRequestHandler.instance.getProfile(this.state.username).then((res) => {
             prof.setState({
-                username: res.email,
+                // username: res.email,
                 name: res.name,
                 contact: res.contact
             });
         });
         APIRequestHandler.instance.getListings({ username: this.state.username }).then((res) => {
+            console.log(res);
             prof.setState({
                 userListings: res
             });
@@ -160,6 +161,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         const out = [];//await APIRequestHandler.instance.getUserWishlist(this.state.username);
         let key = 0;
         for(let listing of this.state.userListings) {
+            console.log("listing", listing)
             out.push(
                 <ListingPreview key={key++} listing={listing} />
             );
@@ -172,6 +174,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         const out = [];
         let key = 0;
         for(let listing of this.state.userWishlistListings) {
+            console.log("wishlisting", listing)
             out.push(
                 <ListingPreview 
                 key={key} 

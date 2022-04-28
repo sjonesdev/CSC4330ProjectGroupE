@@ -22,6 +22,7 @@ interface SignUpState {
     user: boolean
     error: any
     success: boolean
+    mismatch: boolean
 }
  
 class SignUp extends React.Component<SignUpProps, SignUpState> {
@@ -34,6 +35,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
             user: false,
             error: null,
             success: false,
+            mismatch: false,
         };
         this.formData = {
             email: "",
@@ -56,6 +58,9 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
 
     async handleSubmit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
+        if(this.formData.password != this.formData.confirmPassword) {
+            this.setState({ mismatch: true })
+        }
         try {
             let profInfo = {
                 email: this.formData.email,
@@ -78,7 +83,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
             <div className="signup">
                 {this.state.signedIn && <Navigate to="/" replace={true} />}
                 {this.state.success && <Navigate to="/signin" replace={true} />}
-                <h1>Sign In</h1>
+                <h1>Sign Up</h1>
                 <form className='form' onSubmit={(event: React.FormEvent<HTMLFormElement>) => this.handleSubmit(event)}>
                     <label htmlFor="email">Email</label>
                     <input type="email" name="email" id="email" onChange={this.handleChange} />
@@ -89,6 +94,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
                     <label htmlFor="phone">Contact Preference</label>
                     <input type="phone" name="phone" id="phone" onChange={this.handleChange} />
 
+                    {this.state.mismatch ? <span className='small-span red'>Password Mismatch</span> : <></>}
                     <label htmlFor="password">Password</label>
                     <input type="password" name="password" onChange={this.handleChange} />
                     

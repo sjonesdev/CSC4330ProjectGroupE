@@ -16,6 +16,8 @@ class ListingPreview extends React.Component<ListingPreviewProps, any> {
         super(props);
         this.state = { };
 
+        console.log(this.props.listing);
+
         this.removeFromWishlist = this.removeFromWishlist.bind(this);
     }
 
