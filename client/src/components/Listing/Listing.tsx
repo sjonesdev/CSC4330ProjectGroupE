@@ -54,6 +54,7 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
             deleted: false,
             redirectToUpdated: false,
         };
+        this.addToWishlist = this.addToWishlist.bind(this);
         this.handleEditListing = this.handleEditListing.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
     }
@@ -91,6 +92,13 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
         }
 
         return out;
+    }
+
+    addToWishlist() {
+        APIRequestHandler.instance.addWishlistListing(
+            APIRequestHandler.instance.getLoggedIn(), 
+            this.state.listing.username, this.state.listing.title
+        );
     }
 
     handleEditListing(e: React.FormEvent<HTMLFormElement>) {
@@ -194,6 +202,7 @@ class Listing extends React.Component<ListingPlusProps, ListingState> {
                     <h3 className="listing-title">
                         {this.state.listing.title}
                     </h3>
+                    <button onClick={this.addToWishlist}>Add To Wishlist</button>
                     <div className="listing-poster-info">
                         <h4 className="poster-name">
                             {this.state.user.name}

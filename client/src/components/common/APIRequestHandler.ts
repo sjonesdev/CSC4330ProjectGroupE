@@ -170,6 +170,25 @@ class DummyAPIRequestHandler {
         return found ? i : -1;
     }
 
+    private findWishlistIndex(username: string): number {
+        for(let i = 0; i < DummyAPIRequestHandler.database.wishlists.length; i++) {
+            if(DummyAPIRequestHandler.database.listings[i].username === username) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private findWishlistListingIndex(wishlistIndex: number, username: string, title: string) {
+        const wishlist = DummyAPIRequestHandler.database.wishlists[wishlistIndex].info;
+        for(let i = 0; i < wishlist.length; i++) {
+            if(wishlist[i].username === username && wishlist[i].title === title) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     private findWishlist(username: string): WishlistProps[] {
         let wishlist: WishlistProps[] = [];
         for(let i = 0; i < DummyAPIRequestHandler.database.wishlists.length; i++) {
@@ -444,7 +463,12 @@ class DummyAPIRequestHandler {
     removeWishlistListing(username: string, listingUsername: string, listingTitle: string): Promise<boolean> {
         let i = this.findListingInWishlist(username, listingUsername, listingTitle);
         if(i >= 0) {
-            this.findWishlist(username).splice(i, 1);
+            // this.findWishlist(username).splice(i, 1);
+            const idx = this.findWishlistIndex(username);
+            const widx = this.findWishlistListingIndex(idx, listingUsername, listingTitle);
+            console.log(DummyAPIRequestHandler.database.wishlists[idx])
+            DummyAPIRequestHandler.database.wishlists[idx].info.splice(widx, 1);//.splice(idx, 1);
+            console.log(DummyAPIRequestHandler.database.wishlists[idx])
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
                     resolve(true);

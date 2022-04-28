@@ -65,6 +65,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.displayListings = this.displayListings.bind(this);
         this.displayWishlist = this.displayWishlist.bind(this);
+        this.getUpdatedProfileInfo = this.getUpdatedProfileInfo.bind(this);
     }
 
     componentDidMount() {
@@ -171,9 +172,13 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         const out = [];
         let key = 0;
         for(let listing of this.state.userWishlistListings) {
-            console.log(listing.price, this.state.userWishlist[key].price);
             out.push(
-                <ListingPreview key={key} listing={listing} comparePrice={this.state.userWishlist[key].price} />
+                <ListingPreview 
+                key={key} 
+                listing={listing} 
+                comparePrice={this.state.userWishlist[key].price} 
+                refresh={this.getUpdatedProfileInfo}
+                />
             );
             key++;
         }
