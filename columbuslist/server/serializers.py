@@ -5,7 +5,7 @@ from .models import User, Listing, WishlistListing, Tag
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
-        fields=(["username"])
+        fields=(["username", "password"])
 
 class WishlistListingSerializer(serializers.ModelSerializer):
     class Meta:

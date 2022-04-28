@@ -136,7 +136,9 @@ class UserList(APIView):
         if data["username"]:
             username = data["username"]
             if len(username)<=13 or username[-13:]!="@columbus.edu" :
-                    return Response(status=status.HTTP_400_BAD_REQUEST)                                                    
+                    return Response(status=status.HTTP_400_BAD_REQUEST)    
+        if not data["password"]:
+            return Response(status=status.HTTP_400_BAD_REQUEST)                                               
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -202,9 +204,10 @@ class Tags(APIView):
         return Response(status=status.HTTP_202_ACCEPTED)
     
 class Login(APIView):
-    def get(self, request):
-        username = request.query_params.get('username')
-        password = request.query_params.get('password')
+    def post(self, request):
+        data = request.data
+        username = data["username"]
+        password = data["password"]
         users = User.objects.all()
         if username:
             users = users.filter(username=username)
@@ -217,4 +220,8 @@ class Login(APIView):
         if len(users) != 1:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         return Response(status=status.HTTP_200_OK)
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
     
