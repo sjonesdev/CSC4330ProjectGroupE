@@ -72,7 +72,7 @@ class WishlistListings(APIView):
         username = request.query_params.get('username')
         listings = Listing.objects.all()
         if username:
-            listings = listings.filter(user__username__exact=username)
+            listings = listings.filter(username=username)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = WishlistListingSerializer(listings, many=True)
