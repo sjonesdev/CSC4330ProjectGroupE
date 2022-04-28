@@ -18,12 +18,12 @@ class TagSerializer(serializers.ModelSerializer):
         fields=(["name"])
 
 class ListingSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True, read_only=True)
+    #tags = TagSerializer(many=True, read_only=True)
     #title = serializers.CharField(max_length=255)
     #description = serializers.CharField(max_length=255)
     #price = serializers.DecimalField(max_digits=10, decimal_places=2)
     #contact = serializers.CharField(max_length=255)
-
+    
     class Meta:
         model=Listing
         fields=("title", "description", "price", "contact", "username", "tags")

@@ -24,8 +24,8 @@ class Listing(models.Model):
     contact=models.CharField(max_length=255)
     #user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     username=models.CharField(max_length=255, default="...")
-    tags=models.ManyToManyField(Tag)
-
+    #tags=models.ManyToManyField(Tag)
+    tags=models.CharField(max_length=255, default="EMPTY")
     def __str__(self):
         return self.title
 

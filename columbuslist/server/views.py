@@ -26,7 +26,7 @@ class AllListings(APIView):
         if title:
             listings = listings.filter(title__icontains=title)
         if tag:
-            listings = listings.filter(tags__name__iexact=tag)
+            listings = listings.filter(tags__icontains=tag)
         if description:
             listings = listings.filter(description__icontains=description)
         if priceUpper:
